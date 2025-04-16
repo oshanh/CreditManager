@@ -1,0 +1,36 @@
+# Application Name
+spring.application.name=creditManager_backend
+
+# Server Configuration
+server.port=8081
+
+#Security Configuration
+spring.security.user.name=admin
+spring.security.user.password=pwd
+
+# Database Configuration (PostgreSQL)
+#spring.datasource.url=jdbc:postgresql://localhost:5432/credit
+spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/credit
+
+spring.datasource.username=postgres
+spring.datasource.password=RashmiTyre
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+#spring.jpa.properties.hibernate.format_sql=true
+
+
+twilio.account.sid=${sid}
+twilio.auth.token=${token}
+twilio.whatsapp.number=${number}
+
+logging.level.org.springframework.scheduling=DEBUG
+
+abc=OKString
+
+# WhatsApp Cloud API Config
+whatsapp.api.url=https://graph.facebook.com/v22.0/
+whatsapp.phone.id=${YOUR_PHONE_NUMBER_ID}
+whatsapp.access.token=${YOUR_PERMANENT_ACCESS_TOKEN}
+

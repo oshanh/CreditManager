@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: RashmiTyre
+      POSTGRES_DB: credit
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./credit-manager-backend 
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/credit
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: RashmiTyre
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8081"  # Expose backend on localhost:8081
