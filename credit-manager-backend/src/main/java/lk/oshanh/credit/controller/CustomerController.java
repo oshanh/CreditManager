@@ -31,7 +31,7 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDTO> getCustomer(@PathVariable Long id) {
         return customerService.getCustomerById(id)
-                .map(customer -> ResponseEntity.ok(customer))
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
