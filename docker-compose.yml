@@ -1,17 +1,26 @@
-version: '3.8'
-
 services:
+
   postgres:
-    image: postgres
+    image: postgres:alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: RashmiTyre
       POSTGRES_DB: credit
+      Host: host.docker.internal
     ports:
       - "5432:5432"
+  
+
+  
+  frontend:
+    build: ./credit-manager-frontend
+    image: credit-manager-frontend
+    ports:
+      - 3000:3000  # Expose frontend on localhost:5173
 
   backend:
     build: ./credit-manager-backend 
+    image: credit-manager-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/credit
       SPRING_DATASOURCE_USERNAME: postgres
@@ -19,4 +28,10 @@ services:
     depends_on:
       - postgres
     ports:
-      - "8081:8081"  # Expose backend on localhost:8081
+      - 8081:8081  # Expose backend on localhost:8081    
+      
+  
+
+  
+
+      
