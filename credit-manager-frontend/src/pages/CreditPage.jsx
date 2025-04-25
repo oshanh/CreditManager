@@ -23,7 +23,7 @@ import {
   Alert
 } from "@mui/material";
 import { Delete, Edit, Send } from "@mui/icons-material";
-import WebSocketComponent from "./WebSocketComponent";
+import WebSocketComponent from "../components/WebSocketComponent";
 
 function CreditPage() {
   const { customerId } = useParams();

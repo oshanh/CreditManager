@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8081/api/vi/credits';
+const BASE_URL = 'http://localhost:8081/api/v1/credits';
 
 const creditService = {
   getAllCredits: async () => {

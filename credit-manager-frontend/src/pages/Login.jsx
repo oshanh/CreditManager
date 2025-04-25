@@ -3,6 +3,7 @@ import LoginService from '../services/LoginService';
 import { ethers } from 'ethers';
 import { toUtf8Bytes, hexlify } from 'ethers';
 import Web3 from 'web3';
+import { useNavigate } from 'react-router-dom';
 
 
 import { Google as GoogleIcon, Visibility, VisibilityOff, Login as LoginIcon } from '@mui/icons-material';
@@ -34,9 +35,9 @@ palette: {
 
 const Login = () => {
 
-
-
-    const handleWeb3Login = async () => {
+    const navigate = useNavigate();
+    //using ethers.js to sign a message with MetaMask
+    const handleWeb3LoginE = async () => {
         if (!window.ethereum) {
             alert('MetaMask not detected. Please install MetaMask.');
             return;
@@ -76,41 +77,42 @@ const Login = () => {
     };
     
 
+// Uncomment the following code if you want to use Web3.js instead of ethers.js
+const handleWeb3LoginW = async () => {
+    if (!window.ethereum) {
+        alert('MetaMask not detected. Please install MetaMask.');
+        return;
+    }
 
-// const handleWeb3Login = async () => {
-//     if (!window.ethereum) {
-//         alert('MetaMask not detected. Please install MetaMask.');
-//         return;
-//     }
 
-//     try {
-//         const web3 = new Web3(window.ethereum);
+    try {
+        const web3 = new Web3(window.ethereum);
 
-//         // Request user accounts
-//         const accounts = await web3.eth.requestAccounts();
-//         const address = accounts[0]; // Get the connected address
-//         console.log("Connected address:", address);
+        // Request user accounts
+        const accounts = await web3.eth.requestAccounts();
+        const address = accounts[0]; // Get the connected address
+        console.log("Connected address:", address);
 
-//         // Message to sign
-//         const message = "Login";
+        // Message to sign
+        const message = "Login";
 
-//         // Sign the message using MetaMask
-//         const signature = await web3.eth.personal.sign(message, address, '');
+        // Sign the message using MetaMask
+        const signature = await web3.eth.personal.sign(message, address, '');
 
-//         // Send the message, signature, and address to the backend for verification
-//         const result = await LoginService.loginWithWeb3(address, message, signature);
-//         console.log("Web3 login result:", result);
-//         if (result.success) {
-//             alert(`Welcome, ${result.nickname}!`);
-//             // TODO: Navigate or store user context
-//         } else {
-//             alert("Web3 login failed");
-//         }
-//     } catch (error) {
-//         console.error("Error during Web3 login:", error);
-//         alert("Web3 login error. Check console for details.");
-//     }
-// };
+        // Send the message, signature, and address to the backend for verification
+        const result = await LoginService.loginWithWeb3(address, message, signature);
+        console.log("Web3 login result:", result);
+        if (result.success) {
+            alert(`Welcome, ${result.nickname}!`);
+            // TODO: Navigate or store user context
+        } else {
+            alert("Web3 login failed");
+        }
+    } catch (error) {
+        console.error("Error during Web3 login:", error);
+        alert("Web3 login error. Check console for details.");
+    }
+};
     
     
 
@@ -129,11 +131,15 @@ const handleChange = (e) => {
 const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement login logic
+    // For now, just navigate to the dashboard or show a success message
+    
+    navigate('/dashboard');
     console.log('Login attempted with:', formData);
 };
 
 const handleGoogleLogin = () => {
     // TODO: Implement Google login integration
+    navigate('/dashboard');
     console.log('Google login clicked');
 };
 
@@ -232,8 +238,9 @@ return (
                     </Button>
                     <Button
                         fullWidth
+                        disabled
                         variant="outlined"
-                        onClick={handleWeb3Login}
+                        onClick={handleWeb3LoginE}
                         sx={{
                             py: 1.2,
                             color: '#fff',
