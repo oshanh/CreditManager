@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import LoginService from '../services/LoginService';
+import { ethers } from 'ethers';
+import { toUtf8Bytes, hexlify } from 'ethers';
+import Web3 from 'web3';
+
 
 import { Google as GoogleIcon, Visibility, VisibilityOff, Login as LoginIcon } from '@mui/icons-material';
 import { 
@@ -28,6 +33,87 @@ palette: {
 });
 
 const Login = () => {
+
+
+
+    const handleWeb3Login = async () => {
+        if (!window.ethereum) {
+            alert('MetaMask not detected. Please install MetaMask.');
+            return;
+        }
+    
+        try {
+            // Step 1: Initialize provider and signer
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner(); // access MetaMask account
+            const address = await signer.getAddress(); // get user's Ethereum address
+    
+            // Step 2: Define the message to sign
+            const message = "o"; // ideally a random nonce for security
+    
+            // Step 3: Sign the message (includes Ethereum prefix internally)
+            const signature = await signer.signMessage(message); // MetaMask popup
+    
+            // Step 4: Log everything for backend debugging
+            console.log("🔹 Address:", address);
+            console.log("🔹 Message:", message);
+            console.log("🔹 Message (Hex):", hexlify(toUtf8Bytes(message)));
+            console.log("Message (hex):", hexlify(toUtf8Bytes("\x19Ethereum Signed Message:\n1o")));
+            console.log("🔹 Signature:", signature);
+    
+            // Step 5: Send to backend for verification
+            const result = await LoginService.loginWithWeb3(address, message, signature);
+    
+            // Step 6: Display result
+            if (result.success) {
+                alert(`Welcome, ${result.nickname}!`);
+            } else {
+                alert("Web3 login failed");
+            }
+        } catch (error) {
+            console.error("❌ Error during Web3 login:", error);
+        }
+    };
+    
+
+
+// const handleWeb3Login = async () => {
+//     if (!window.ethereum) {
+//         alert('MetaMask not detected. Please install MetaMask.');
+//         return;
+//     }
+
+//     try {
+//         const web3 = new Web3(window.ethereum);
+
+//         // Request user accounts
+//         const accounts = await web3.eth.requestAccounts();
+//         const address = accounts[0]; // Get the connected address
+//         console.log("Connected address:", address);
+
+//         // Message to sign
+//         const message = "Login";
+
+//         // Sign the message using MetaMask
+//         const signature = await web3.eth.personal.sign(message, address, '');
+
+//         // Send the message, signature, and address to the backend for verification
+//         const result = await LoginService.loginWithWeb3(address, message, signature);
+//         console.log("Web3 login result:", result);
+//         if (result.success) {
+//             alert(`Welcome, ${result.nickname}!`);
+//             // TODO: Navigate or store user context
+//         } else {
+//             alert("Web3 login failed");
+//         }
+//     } catch (error) {
+//         console.error("Error during Web3 login:", error);
+//         alert("Web3 login error. Check console for details.");
+//     }
+// };
+    
+    
+
 const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -144,6 +230,23 @@ return (
                     >
                         Continue with Google
                     </Button>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={handleWeb3Login}
+                        sx={{
+                            py: 1.2,
+                            color: '#fff',
+                            borderColor: '#f3ba2f',
+                            '&:hover': {
+                                borderColor: '#c8a600',
+                                backgroundColor: 'rgba(243, 186, 47, 0.1)',
+                            },
+                        }}
+                    >
+                        Connect with MetaMask
+                    </Button>
+
                     
                     <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
                         <Button color="secondary" variant="text" size="small">
