@@ -66,7 +66,8 @@ const Login = () => {
     
             // Step 6: Display result
             if (result.success) {
-                alert(`Welcome, ${result.nickname}!`);
+                //alert(`Welcome, ${result.nickname}!`);
+                navigate('/dashboard'); // Redirect to dashboard or home page
             } else {
                 alert("Web3 login failed");
             }

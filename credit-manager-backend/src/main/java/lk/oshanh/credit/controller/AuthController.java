@@ -1,7 +1,5 @@
 package lk.oshanh.credit.controller;
 import lk.oshanh.credit.dto.LoginResponseDTO;
-import lk.oshanh.credit.entity.User;
-import lk.oshanh.credit.repository.UserRepository;
 import lk.oshanh.credit.dto.Web3LoginRequest;
 import lk.oshanh.credit.service.Web3LoginService;
 import org.springframework.http.HttpStatus;

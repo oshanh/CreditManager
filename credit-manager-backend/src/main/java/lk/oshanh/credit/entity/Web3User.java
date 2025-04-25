@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Data  // Lombok annotation to generate getters, setters, toString, equals, hashCode methods
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "web3users")
+public class Web3User {
     @Id
     private String address; // Ethereum address as the unique ID
 
