@@ -20,10 +20,12 @@ function App() {
         {/* Main Content */}
         <Container maxWidth="lg" sx={{ paddingBottom: 4, marginTop: 4 }}>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/debtors" element={<Debtors />} />
             <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<Login />} />
+            <Route >
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/debtors" element={<Debtors />} />
+            </Route>
             <Route path="/credits/:customerId" element={<CreditPage />} />
           </Routes>
         </Container>

@@ -1,34 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Card, CardContent, Typography, Avatar, CircularProgress } from "@mui/material";
-import Image from "../assets/PP1.jpg"; // Placeholder image for the card background
+import Image from "../assets/profile.png"; // Placeholder image for the card background
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 
 const mockDebtors = [
-  {
-    id: 1,
-    name: "John Doe",
-    image: Image,
-    outstanding: 50000,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    image: "https://via.placeholder.com/150",
-    outstanding: 30000,
-  },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    image: "https://via.placeholder.com/150",
-    outstanding: 20000,
-  },
-  {
-    id: 4,
-    name: "Bob Brown",
-    image: "https://via.placeholder.com/150",
-    outstanding: 10000,
-  },
+    {
+        id: 1,
+        name: "John Doe",
+        image: Image,
+        outstanding: 500000,
+    },
+    {
+        id: 2,
+        name: "Jane Smith",
+        image: Image,
+        outstanding: 300000,
+    },
+    {
+        id: 3,
+        name: "Alice Johnson",
+        image: Image,
+        outstanding: 200000,
+    },
+    {
+        id: 4,
+        name: "Bob Brown",
+        image: Image,
+        outstanding: 10000,
+    },
+    ...Array.from({ length: 26 }, (_, i) => ({
+        id: i + 5,
+        name: `Debtor ${i + 5}`,
+        image: Image,
+        outstanding: Math.random() > 0.5 ? Math.floor(Math.random() * 900000) + 100000 : Math.floor(Math.random() * 9000) + 1000,
+    })),
 ];
 
 const Debtors = () => {
@@ -70,7 +76,7 @@ const Debtors = () => {
         <Navbar />
     <Grid container spacing={3} sx={{ padding: 3 }}>
       {debtors.map((debtor) => {
-        const circleRadius = (debtor.outstanding / totalOutstanding) * 100;
+        const circleRadius = (debtor.outstanding / totalOutstanding) * 100*15;
 
         return (
           <Grid item xs={12} sm={6} md={4} lg={3} key={debtor.id}>
@@ -81,6 +87,9 @@ const Debtors = () => {
             sx={{
               width: circleRadius,
               height: circleRadius,
+              minWidth:75,
+              minHeight:75,
+              borderRadius: "50%",
               margin: "0 auto",
               border: "2px solid #1976d2",
               backgroundColor: "transparent",
