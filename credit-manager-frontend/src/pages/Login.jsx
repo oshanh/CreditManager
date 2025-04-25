@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import LoginService from '../services/LoginService';
 import { ethers } from 'ethers';
-import { toUtf8Bytes, hexlify } from 'ethers';
-import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -36,8 +34,9 @@ palette: {
 const Login = () => {
 
     const navigate = useNavigate();
+
     //using ethers.js to sign a message with MetaMask
-    const handleWeb3LoginE = async () => {
+    const handleWeb3Login = async () => {
         if (!window.ethereum) {
             alert('MetaMask not detected. Please install MetaMask.');
             return;
@@ -50,7 +49,7 @@ const Login = () => {
             const address = await signer.getAddress(); // get user's Ethereum address
     
             // Step 2: Define the message to sign
-            const message = "o"; // ideally a random nonce for security
+            const message = Math.random().toString(36).substring(2); // generate a random nonce
     
             // Step 3: Sign the message (includes Ethereum prefix internally)
             const signature = await signer.signMessage(message); // MetaMask popup
@@ -58,12 +57,12 @@ const Login = () => {
             // Step 4: Log everything for backend debugging
             console.log("🔹 Address:", address);
             console.log("🔹 Message:", message);
-            console.log("🔹 Message (Hex):", hexlify(toUtf8Bytes(message)));
-            console.log("Message (hex):", hexlify(toUtf8Bytes("\x19Ethereum Signed Message:\n1o")));
+        
             console.log("🔹 Signature:", signature);
     
             // Step 5: Send to backend for verification
             const result = await LoginService.loginWithWeb3(address, message, signature);
+            console.log("Web3 login result:", result);
     
             // Step 6: Display result
             if (result.success) {
@@ -77,44 +76,6 @@ const Login = () => {
     };
     
 
-// Uncomment the following code if you want to use Web3.js instead of ethers.js
-const handleWeb3LoginW = async () => {
-    if (!window.ethereum) {
-        alert('MetaMask not detected. Please install MetaMask.');
-        return;
-    }
-
-
-    try {
-        const web3 = new Web3(window.ethereum);
-
-        // Request user accounts
-        const accounts = await web3.eth.requestAccounts();
-        const address = accounts[0]; // Get the connected address
-        console.log("Connected address:", address);
-
-        // Message to sign
-        const message = "Login";
-
-        // Sign the message using MetaMask
-        const signature = await web3.eth.personal.sign(message, address, '');
-
-        // Send the message, signature, and address to the backend for verification
-        const result = await LoginService.loginWithWeb3(address, message, signature);
-        console.log("Web3 login result:", result);
-        if (result.success) {
-            alert(`Welcome, ${result.nickname}!`);
-            // TODO: Navigate or store user context
-        } else {
-            alert("Web3 login failed");
-        }
-    } catch (error) {
-        console.error("Error during Web3 login:", error);
-        alert("Web3 login error. Check console for details.");
-    }
-};
-    
-    
 
 const [formData, setFormData] = useState({
     username: '',
@@ -238,9 +199,9 @@ return (
                     </Button>
                     <Button
                         fullWidth
-                        disabled
+                        //disabled
                         variant="outlined"
-                        onClick={handleWeb3LoginE}
+                        onClick={handleWeb3Login}
                         sx={{
                             py: 1.2,
                             color: '#fff',
@@ -251,6 +212,7 @@ return (
                             },
                         }}
                     >
+                        {<img src="https://cdn.iconscout.com/icon/free/png-256/metamask-2728406-2261817.png" alt="MetaMask" style={{ width: 24, height: 24,marginRight:7 }} />}
                         Connect with MetaMask
                     </Button>
 
