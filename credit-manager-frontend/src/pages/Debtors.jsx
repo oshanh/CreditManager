@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Grid, Card, CardContent, Typography, Avatar, CircularProgress } from "@mui/material";
 import Image from "../assets/profile.png"; // Placeholder image for the card background
 import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const mockDebtors = [
     {
@@ -43,10 +43,8 @@ const Debtors = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call with mock data
     const fetchDebtors = async () => {
       try {
-        // Simulate a delay
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const data = mockDebtors;
 
@@ -76,32 +74,34 @@ const Debtors = () => {
         <Navbar />
     <Grid container spacing={3} sx={{ padding: 3 }}>
       {debtors.map((debtor) => {
-        const circleRadius = (debtor.outstanding / totalOutstanding) * 100*15;
+        const circleRadius = (debtor.outstanding / totalOutstanding) * 100 * 15;
 
         return (
           <Grid item xs={12} sm={6} md={4} lg={3} key={debtor.id}>
-            <Card sx={{ textAlign: "center", padding: 2, border: 0, backgroundColor: "transparent" }}>
-              <Avatar
-            src={debtor.image}
-            alt={debtor.name}
-            sx={{
-              width: circleRadius,
-              height: circleRadius,
-              minWidth:75,
-              minHeight:75,
-              borderRadius: "50%",
-              margin: "0 auto",
-              border: "2px solid #1976d2",
-              backgroundColor: "transparent",
-            }}
-              />
-              <CardContent>
-            <Typography variant="h6">{debtor.name}</Typography>
-            <Typography variant="body2" color="textSecondary">
-              Outstanding: ${debtor.outstanding.toFixed(2)}
-            </Typography>
-              </CardContent>
-            </Card>
+            <Link to={`/debtor/${debtor.id}`} style={{ textDecoration: "none" }}>
+              <Card sx={{ textAlign: "center", padding: 2, border: 0, backgroundColor: "transparent" }}>
+                <Avatar
+                  src={debtor.image}
+                  alt={debtor.name}
+                  sx={{
+                    width: circleRadius,
+                    height: circleRadius,
+                    minWidth: 75,
+                    minHeight: 75,
+                    borderRadius: "50%",
+                    margin: "0 auto",
+                    border: "2px solid #1976d2",
+                    backgroundColor: "transparent",
+                  }}
+                />
+                <CardContent>
+                  <Typography variant="h6">{debtor.name}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Outstanding: ${debtor.outstanding.toFixed(2)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
         );
       })}

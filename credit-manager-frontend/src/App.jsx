@@ -9,6 +9,7 @@ import Welcome from "./pages/Welcome";
 import Debtors from "./pages/Debtors";
 import darkTheme from "./utils/Theme";
 import Navbar from "./components/Navbar";
+import Debtor from "./pages/Debtor";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route >
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/debtors" element={<Debtors />} />
+              <Route path="/debtor/:debtorId" element={<Debtor />} />
             </Route>
             <Route path="/credits/:customerId" element={<CreditPage />} />
           </Routes>

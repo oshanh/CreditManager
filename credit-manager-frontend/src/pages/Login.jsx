@@ -66,7 +66,7 @@ const Login = () => {
     
             // Step 6: Display result
             if (result.success) {
-                //alert(`Welcome, ${result.nickname}!`);
+                
                 navigate('/dashboard'); // Redirect to dashboard or home page
             } else {
                 alert("Web3 login failed");
@@ -170,6 +170,7 @@ return (
                     <Button
                         type="submit"
                         fullWidth
+                        disabled
                         variant="contained"
                         sx={{ mt: 3, mb: 2, py: 1.2 }}
                         endIcon={<LoginIcon />}
@@ -181,6 +182,7 @@ return (
                     
                     <Button
                         fullWidth
+                        disabled
                         variant="outlined"
                         onClick={handleGoogleLogin}
                         startIcon={<GoogleIcon />}

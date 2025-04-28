@@ -21,4 +21,8 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Credit> credits;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

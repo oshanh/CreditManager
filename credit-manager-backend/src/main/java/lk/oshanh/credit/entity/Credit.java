@@ -15,7 +15,6 @@ public class Credit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Double creditAmount;
     private String description;
     private LocalDate dueDate;

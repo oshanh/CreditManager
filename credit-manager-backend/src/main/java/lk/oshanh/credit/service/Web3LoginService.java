@@ -2,8 +2,8 @@ package lk.oshanh.credit.service;
 
 import lk.oshanh.credit.dto.LoginResponseDTO;
 import lk.oshanh.credit.dto.Web3LoginRequest;
-import lk.oshanh.credit.entity.Web3User;
-import lk.oshanh.credit.repository.Web3UserRepository;
+import lk.oshanh.credit.entity.User;
+import lk.oshanh.credit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class Web3LoginService {
-    private final Web3UserRepository web3UserRepository;
+    private final UserRepository userRepository;
 
 
     public boolean verifyWithNode(Web3LoginRequest request){
@@ -66,19 +66,20 @@ public class Web3LoginService {
 
     public LoginResponseDTO loginOrRegisterWeb3User(Web3LoginRequest request){
         // Create or get user
-        Web3User web3User = web3UserRepository.findById(request.getAddress()).orElseGet(() -> {
-            Web3User newWeb3User = new Web3User();
-            newWeb3User.setAddress(request.getAddress());
-            newWeb3User.setCreatedAt(LocalDateTime.now());
-            newWeb3User.setNickname("User_" + request.getAddress().substring(2, 6));
-            return newWeb3User;
+        User user = userRepository.findByAddress(request.getAddress()).orElseGet(() -> {
+            User newUser = new User();
+            newUser.setAddress(request.getAddress());
+            newUser.setCreatedAt(LocalDateTime.now());
+            newUser.setNickname("User_" + request.getAddress().substring(2, 6));
+            newUser.setEmail(null);
+            return newUser;
         });
 
-        Web3User savedWeb3User = web3UserRepository.save(web3User);
+        User savedUser = userRepository.save(user);
 
         LoginResponseDTO responseDTO=new LoginResponseDTO();
         responseDTO.setSuccess(true);
-        responseDTO.setNickname(savedWeb3User.getNickname());
+        responseDTO.setNickname(savedUser.getNickname());
 
 
         System.out.println("\nLast line called\n"+responseDTO.getNickname()+"\n"+responseDTO.isSuccess());
