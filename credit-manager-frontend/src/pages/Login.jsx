@@ -224,8 +224,13 @@ return (
                         <Button color="secondary" variant="text" size="small">
                             Forgot Password?
                         </Button>
-                        <Button color="secondary" variant="text" size="small">
-                            Create Account
+                        <Button
+                          color="secondary"
+                          variant="text"
+                          size="small"
+                          onClick={() => navigate("/create-account")}
+                        >
+                          Create Account
                         </Button>
                     </Box>
                 </Box>
