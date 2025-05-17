@@ -16,8 +16,10 @@ Divider,
 IconButton, 
 InputAdornment, 
 ThemeProvider, 
-createTheme 
+createTheme,
+
 } from '@mui/material';
+import { useUser } from '../context/UserContext';
 
 const darkTheme = createTheme({
 palette: {
@@ -34,6 +36,9 @@ palette: {
 const Login = () => {
 
     const navigate = useNavigate();
+    const { login } = useUser();
+
+
 
     //using ethers.js to sign a message with MetaMask
     const handleWeb3Login = async () => {
@@ -61,12 +66,16 @@ const Login = () => {
             console.log("🔹 Signature:", signature);
     
             // Step 5: Send to backend for verification
-            const result = await LoginService.loginWithWeb3(address, message, signature);
-            console.log("Web3 login result:", result);
+            const loginResponse = await LoginService.loginWithWeb3(address, message, signature);
+            console.log("Web3 login loginResponse:", loginResponse);
     
-            // Step 6: Display result
-            if (result.success) {
-                
+            // Step 6: Display loginResponse
+            if (loginResponse.success) {
+                login({
+                    id: loginResponse.id,
+                    nickname: loginResponse.nickname
+                });
+
                 navigate('/dashboard'); // Redirect to dashboard or home page
             } else {
                 alert("Web3 login failed");
@@ -107,7 +116,13 @@ const handleGoogleLogin = () => {
 
 return (
     <ThemeProvider theme={darkTheme}>
-        <Container component="main" maxWidth="xs" sx={{ height: '100vh', display: 'flex', alignItems: 'center' }}>
+        <Container component="main" maxWidth="xs" sx={{ 
+            minHeight: 'calc(100vh - 64px)', // Subtract navbar height
+            display: 'flex', 
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: 4
+        }}>
             <Paper 
                 elevation={10} 
                 sx={{ 
@@ -116,12 +131,11 @@ return (
                     flexDirection: 'column', 
                     alignItems: 'center',
                     borderRadius: 2,
-                    background: 'linear-gradient(145deg, #1e1e1e 0%, #2d2d2d 100%)'
+                    background: 'linear-gradient(145deg, #1e1e1e 0%, #2d2d2d 100%)',
+                    width: '100%'
                 }}
             >
-                <Typography component="h1" variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: '#90caf9' }}>
-                    Credit Manager
-                </Typography>
+                
                 
                 <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
                     Sign In
@@ -170,7 +184,7 @@ return (
                     <Button
                         type="submit"
                         fullWidth
-                        disabled
+                        //disabled
                         variant="contained"
                         sx={{ mt: 3, mb: 2, py: 1.2 }}
                         endIcon={<LoginIcon />}
@@ -182,7 +196,7 @@ return (
                     
                     <Button
                         fullWidth
-                        disabled
+                        //disabled
                         variant="outlined"
                         onClick={handleGoogleLogin}
                         startIcon={<GoogleIcon />}

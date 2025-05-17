@@ -18,9 +18,14 @@ public class Customer {
 
     private String customerName;
     private String contactNumber;
+    private String address;
+    private String profilePhotoPath;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Credit> credits;
+
+    @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -5,6 +5,8 @@ import lk.oshanh.credit.dto.Web3LoginRequest;
 import lk.oshanh.credit.entity.User;
 import lk.oshanh.credit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class Web3LoginService {
     private final UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(Web3LoginService.class);
 
 
     public boolean verifyWithNode(Web3LoginRequest request){
@@ -49,7 +52,7 @@ public class Web3LoginService {
 
             Map<String, Object> responseBody = response.getBody();
             boolean isValid = responseBody != null && Boolean.TRUE.equals(responseBody.get("valid"));
-            System.out.println("\n\n validity : "+isValid +"\n\n");
+            logger.info("Verification validity: {}", isValid);
 
             if (isValid) {
                 return true;
@@ -80,9 +83,9 @@ public class Web3LoginService {
         LoginResponseDTO responseDTO=new LoginResponseDTO();
         responseDTO.setSuccess(true);
         responseDTO.setNickname(savedUser.getNickname());
+        responseDTO.setId(savedUser.getUid());
 
-
-        System.out.println("\nLast line called\n"+responseDTO.getNickname()+"\n"+responseDTO.isSuccess());
+        logger.info("Login successful for user: {}, success: {}", responseDTO.getNickname(), responseDTO.isSuccess());
 
         return responseDTO;
     }

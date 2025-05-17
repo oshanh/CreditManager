@@ -20,17 +20,20 @@ import java.util.stream.Collectors;
 @Service
 public class CreditService {
 
-    @Autowired
-    private CreditRepository creditRepository;
+    private final CreditRepository creditRepository;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    @Autowired
-    private  SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
     private CustomerMapper customerMapper=new CustomerMapper();
+
+    public CreditService(CreditRepository creditRepository, CustomerRepository customerRepository, SimpMessagingTemplate messagingTemplate) {
+        this.creditRepository = creditRepository;
+        this.customerRepository = customerRepository;
+        this.messagingTemplate = messagingTemplate;
+    }
 
     // Create credit for a customer
     @Transactional

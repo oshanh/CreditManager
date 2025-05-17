@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponseDTO {
-    boolean success;
-    String nickname;
+    private boolean success;
+    private String nickname;
+    private Long id;
+
 
 
 }

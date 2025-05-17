@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { CssBaseline, ThemeProvider, AppBar, Toolbar, Typography, Button, Container } from "@mui/material";
+import { CssBaseline, ThemeProvider, Container } from "@mui/material";
 import CustomerPage from "./pages/CustomerPage";
 import CreditPage from "./pages/CreditPage";
 import Login from "./pages/Login";
@@ -17,22 +17,29 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Router>
-        
-
-        {/* Main Content */}
-        <Container maxWidth="lg" sx={{ paddingBottom: 4, marginTop: 4 }}>
-          <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/create-account" element={<CreateAccount />} />
-            <Route >
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/debtors" element={<Debtors />} />
-              <Route path="/debtor/:debtorId" element={<Debtor />} />
-            </Route>
-            <Route path="/credits/:customerId" element={<CreditPage />} />
-          </Routes>
-        </Container>
+        <Routes>
+          {/* Welcome page without navbar */}
+          <Route path="/" element={<Welcome />} />
+          
+          
+          {/* Routes with navbar */}
+          <Route path="/*" element={
+            <>
+              <Navbar />
+              <Container maxWidth="lg" sx={{ paddingBottom: 4, marginTop: 4 }}>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/create-account" element={<CreateAccount />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/debtors" element={<Debtors />} />
+                  <Route path="/debtor/:debtorId" element={<Debtor />} />
+                  <Route path="/credits/:customerId" element={<CreditPage />} />
+                  <Route path="/customer" element={<CustomerPage />} />
+                </Routes>
+              </Container>
+            </>
+          } />
+        </Routes>
       </Router>
     </ThemeProvider>
   );

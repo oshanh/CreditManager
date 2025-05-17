@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Card, CardContent, Typography, Avatar, CircularProgress } from "@mui/material";
+import { Card, CardContent, Typography, Avatar, CircularProgress } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Image from "../assets/profile.png"; // Placeholder image for the card background
 import Navbar from "../components/Navbar";
 import { useNavigate, Link } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const mockDebtors = [
     {
@@ -41,6 +43,8 @@ const Debtors = () => {
   const [debtors, setDebtors] = useState([]);
   const [totalOutstanding, setTotalOutstanding] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
+  console.log("inside Debtors", user);
 
   useEffect(() => {
     const fetchDebtors = async () => {
@@ -70,14 +74,12 @@ const Debtors = () => {
   }
 
   return (
-    <>
-        <Navbar />
     <Grid container spacing={3} sx={{ padding: 3 }}>
       {debtors.map((debtor) => {
         const circleRadius = (debtor.outstanding / totalOutstanding) * 100 * 15;
 
         return (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={debtor.id}>
+          <Grid xs={12} sm={6} md={4} lg={3} key={debtor.id}>
             <Link to={`/debtor/${debtor.id}`} style={{ textDecoration: "none" }}>
               <Card sx={{ textAlign: "center", padding: 2, border: 0, backgroundColor: "transparent" }}>
                 <Avatar
@@ -106,7 +108,6 @@ const Debtors = () => {
         );
       })}
     </Grid>
-    </>
   );
 };
 

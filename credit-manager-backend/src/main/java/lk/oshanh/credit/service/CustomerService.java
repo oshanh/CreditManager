@@ -2,35 +2,74 @@ package lk.oshanh.credit.service;
 
 import lk.oshanh.credit.dto.CustomerDTO;
 import lk.oshanh.credit.entity.Customer;
+import lk.oshanh.credit.entity.User;
 import lk.oshanh.credit.mapper.CustomerMapper;
 import lk.oshanh.credit.repository.CustomerRepository;
+import lk.oshanh.credit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
 
-    @Autowired
-    private CustomerRepository customerRepository;
+
+    private final CustomerRepository customerRepository;
+
+    private final UserRepository userRepository;
+
+    public CustomerService(CustomerRepository customerRepository, UserRepository userRepository) {
+        this.customerRepository = customerRepository;
+        this.userRepository = userRepository;
+
+    }
 
     // Create a new customer
-    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
+    public CustomerDTO createCustomer(CustomerDTO customerDTO, MultipartFile file,Long userId) {
+        User user = userRepository.findById(String.valueOf(userId))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Customer customer = CustomerMapper.toEntity(customerDTO);
-        customer = customerRepository.save(customer);
+        customer.setUser(user);
+
+        if (file != null && !file.isEmpty()) {
+            try {
+                String uploadDir = "uploads/customers";
+                Files.createDirectories(Paths.get(uploadDir));
+
+                String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadDir, fileName);
+                Files.copy(file.getInputStream(), filePath);
+
+                // Save relative path
+                customer.setProfilePhotoPath("/uploads/customers/" + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to store image", e);
+            }
+        }
+
+        customer = customerRepository.saveAndFlush(customer);
         return CustomerMapper.toDTO(customer);
     }
 
+
     // Get all customers
-    public List<CustomerDTO> getAllCustomers() {
-        return customerRepository.findAll()
+    public List<CustomerDTO> getCustomersByUserId(Long userId) {
+        return customerRepository.findCustomersByUser_Uid(userId)
                 .stream()
                 .map(CustomerMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
 
     // Get customer by ID
     public Optional<CustomerDTO> getCustomerById(Long id) {

@@ -11,6 +11,8 @@ public class CustomerMapper {
         dto.setId(customer.getId());
         dto.setCustomerName(customer.getCustomerName());
         dto.setContactNumber(customer.getContactNumber());
+        customer.setAddress(dto.getAddress());
+        customer.setProfilePhotoPath(dto.getProfilePhotoPath());
         return dto;
     }
 
@@ -19,6 +21,8 @@ public class CustomerMapper {
         customer.setId(dto.getId());
         customer.setCustomerName(dto.getCustomerName());
         customer.setContactNumber(dto.getContactNumber());
+        customer.setAddress(dto.getAddress());
+        customer.setProfilePhotoPath(dto.getProfilePhotoPath());
         return customer;
     }
 }

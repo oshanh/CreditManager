@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Card, Container, Grid, Typography, CircularProgress, Paper, Divider } from '@mui/material';
+import { Box, Button, Card, Container, Grid, Typography, CircularProgress, Paper, Divider,Dialog } from '@mui/material';
 import { Add as AddIcon, Person as PersonIcon, AttachMoney as MoneyIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import AddDebtor from '../components/AddDebtor'; // Import AddDebtor
+import { useUser } from '../context/UserContext';
+
 
 // Mock data (replace with actual data fetching)
 const mockStats = {
@@ -22,6 +24,10 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState(null);
     const [recentDebtors, setRecentDebtors] = useState([]);
+    const [openAddDebtor, setOpenAddDebtor] = useState(false); // Dialog state
+    const { user } = useUser();
+    console.log(user);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,8 +48,7 @@ const Dashboard = () => {
     }
 
     return (
-        <>
-        <Navbar />
+        
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             {/* Header Section */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -54,11 +59,16 @@ const Dashboard = () => {
                     variant="contained" 
                     color="primary" 
                     startIcon={<AddIcon />}
-                    onClick={() => navigate('/add-debtor')}
+                    onClick={() => setOpenAddDebtor(true)} // Open dialog
+
                 >
                     Add New Debtor
                 </Button>
             </Box>
+            {/* Add Debtor Dialog */}
+            <Dialog open={openAddDebtor} onClose={() => setOpenAddDebtor(false)} maxWidth="sm" fullWidth>
+                <AddDebtor />
+            </Dialog>
 
             {/* Stats Section */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -196,7 +206,7 @@ const Dashboard = () => {
                 </Grid>
             </Paper>
         </Container>
-        </>
+    
     );
 };
 

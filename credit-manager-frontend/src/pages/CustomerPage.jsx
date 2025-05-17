@@ -21,6 +21,8 @@ function CustomerPage() {
       .catch((err) => console.error("Error fetching customers:", err));
   }, []);
 
+  console.log(customers);
+
   // Handle search change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);

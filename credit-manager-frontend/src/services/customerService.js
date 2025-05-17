@@ -5,7 +5,9 @@ const BASE_URL = 'http://localhost:8081/api/v1/customers';
 const customerService = {
   getAllCustomers: async () => {
     try {
-      const response = await axios.get(BASE_URL);
+      const response = await axios.get(BASE_URL,{
+        withCredentials: true
+      });
       return response.data;
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -41,6 +43,24 @@ const customerService = {
       throw error;
     }
   },
+  addCustomer : (customerData, file) => {
+    const formData = new FormData();
+
+    // Append customer fields as JSON string (or individually)
+    formData.append('customer', new Blob([JSON.stringify(customerData)], { type: 'application/json' }));
+
+    // Append file if exists
+    if (file) {
+      formData.append('file', file);
+    }
+
+    return axios.post(BASE_URL, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true
+    });
+  }
 };
 
 export default customerService;

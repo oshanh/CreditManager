@@ -15,8 +15,11 @@ import java.util.List;
 
 public class CreditController {
 
-    @Autowired
-    private CreditService creditService;
+    private final CreditService creditService;
+
+    public CreditController(CreditService creditService) {
+        this.creditService = creditService;
+    }
 
 //    @Autowired
 //    private WhatsAppService whatsAppService;
