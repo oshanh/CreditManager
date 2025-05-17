@@ -13,4 +13,5 @@ public class CustomerDTO {
     private String contactNumber;
     private String address;
     private String profilePhotoPath;
+    private double totalCredit;
 }

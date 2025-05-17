@@ -64,6 +64,16 @@ public class CustomerService {
 
     // Get all customers
     public List<CustomerDTO> getCustomersByUserId(Long userId) {
+    System.out.println("Retrieving customers for user ID: " + userId);
+    List<Customer> customers = customerRepository.findCustomersByUser_Uid(userId);
+    System.out.println("Found " + customers.size() + " customers for user ID: " + userId);
+    return customers.stream()
+            .map(CustomerMapper::toDTO)
+            .peek(dto -> System.out.println("Mapped customer to DTO: " + dto))
+            .collect(Collectors.toList());
+}
+
+public List<CustomerDTO> getCustomersByUserId1(Long userId) {
         return customerRepository.findCustomersByUser_Uid(userId)
                 .stream()
                 .map(CustomerMapper::toDTO)

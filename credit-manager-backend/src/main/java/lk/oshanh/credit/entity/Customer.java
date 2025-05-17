@@ -20,6 +20,7 @@ public class Customer {
     private String contactNumber;
     private String address;
     private String profilePhotoPath;
+    private double totalCredit;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Credit> credits;
