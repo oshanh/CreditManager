@@ -5,6 +5,9 @@ import Image from "../assets/profile.png"; // Placeholder image for the card bac
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import customerService from "../services/customerService";
+import { useLocation } from "react-router-dom";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const mockDebtors = [
     {
@@ -49,6 +52,9 @@ const Debtors = () => {
   const { user } = useUser();
   console.log("inside Debtors", user);
 
+  const passedState = useLocation().state;
+  console.log("Passed state:", passedState);
+
   useEffect(() => {
     const fetchDebtors = async () => {
       try {
@@ -82,10 +88,12 @@ const Debtors = () => {
 
         return (
           <Grid xs={12} sm={6} md={4} lg={3} key={debtor.id}>
-            <Link to={`/debtor/${debtor.id}`} style={{ textDecoration: "none" }}>
+            <Link to={`/debtor/${debtor.id}`} 
+                  state={{ debtorId: debtor.id }}
+                  style={{ textDecoration: "none" }}>
               <Card sx={{ textAlign: "center", padding: 2, border: 0, backgroundColor: "transparent" }}>
                 <Avatar
-                  src={'http://localhost:8081'+debtor.profilePhotoPath}
+                  src={debtor.profilePhotoPath? `${API_BASE_URL}${debtor.profilePhotoPath}`: Image}
                   alt={debtor.customerName}
                   sx={{
                     width: circleRadius,

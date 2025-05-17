@@ -13,12 +13,12 @@ const customerService = {
     }
   },
 
-  createCustomer: async (customerData) => {
+  getCustomerById: async (customerId) => {
     try {
-      const response = await apiClient.post(BASE_URL, customerData);
+      const response = await apiClient.get(`${BASE_URL}/${customerId}`);
       return response.data;
     } catch (error) {
-      console.error('Error creating customer:', error);
+      console.error('Error fetching customer:', error);
       throw error;
     }
   },
@@ -54,6 +54,8 @@ const customerService = {
       },
     });
   }
+
+
 };
 
 export default customerService;
