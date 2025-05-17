@@ -1,11 +1,11 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const BASE_URL = 'http://localhost:8081/api/v1/repayments';
+const BASE_URL = '/repayments';
 
 const repaymentService = {
   getRepaymentsForCredit: async (creditId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/${creditId}`);
+      const response = await apiClient.get(`${BASE_URL}/${creditId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching repayments:', error);
@@ -15,7 +15,7 @@ const repaymentService = {
 
   createRepayment: async (creditId, repaymentData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/${creditId}`, repaymentData);
+      const response = await apiClient.post(`${BASE_URL}/${creditId}`, repaymentData);
       return response.data;
     } catch (error) {
       console.error('Error creating repayment:', error);
@@ -25,7 +25,7 @@ const repaymentService = {
 
   updateRepayment: async (repaymentId, repaymentData) => {
     try {
-      const response = await axios.put(`${BASE_URL}/${repaymentId}`, repaymentData);
+      const response = await apiClient.put(`${BASE_URL}/${repaymentId}`, repaymentData);
       return response.data;
     } catch (error) {
       console.error('Error updating repayment:', error);
@@ -35,7 +35,7 @@ const repaymentService = {
 
   deleteRepayment: async (repaymentId) => {
     try {
-      await axios.delete(`${BASE_URL}/${repaymentId}`);
+      await apiClient.delete(`${BASE_URL}/${repaymentId}`);
     } catch (error) {
       console.error('Error deleting repayment:', error);
       throw error;

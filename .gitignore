@@ -4,3 +4,4 @@ application.properties~
 *.java~
 credit-manager-backend/src/main/resources/application.properties~
 credit-manager-backend/src/main/java/lk/oshanh/credit/controller/TestController.java~
+.vscode/

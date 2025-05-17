@@ -1,11 +1,11 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const BASE_URL = 'http://localhost:8081/api/v1/credits';
+const BASE_URL = '/credits';
 
 const creditService = {
   getAllCredits: async () => {
     try {
-      const response = await axios.get(BASE_URL);
+      const response = await apiClient.get(BASE_URL);
       return response.data;
     } catch (error) {
       console.error('Error fetching credits:', error);
@@ -15,7 +15,7 @@ const creditService = {
 
   createCredit: async (creditData) => {
     try {
-      const response = await axios.post(BASE_URL, creditData);
+      const response = await apiClient.post(BASE_URL, creditData);
       return response.data;
     } catch (error) {
       console.error('Error creating credit:', error);
@@ -25,7 +25,7 @@ const creditService = {
 
   updateCredit: async (creditId, creditData) => {
     try {
-      const response = await axios.put(`${BASE_URL}/${creditId}`, creditData);
+      const response = await apiClient.put(`${BASE_URL}/${creditId}`, creditData);
       return response.data;
     } catch (error) {
       console.error('Error updating credit:', error);
@@ -35,17 +35,16 @@ const creditService = {
 
   deleteCredit: async (creditId) => {
     try {
-      await axios.delete(`${BASE_URL}/${creditId}`);
+      await apiClient.delete(`${BASE_URL}/${creditId}`);
     } catch (error) {
       console.error('Error deleting credit:', error);
       throw error;
     }
   },
 
-  // 🔹 New Method: Send WhatsApp Notification
   sendWhatsAppNotification: async (customerId, creditId) => {
     try {
-      const response = await axios.post(`${BASE_URL}/${customerId}/whatsapp/${creditId}`);
+      const response = await apiClient.post(`${BASE_URL}/${customerId}/whatsapp/${creditId}`);
       return response.data;
     } catch (error) {
       console.error("Error sending WhatsApp notification:", error);
