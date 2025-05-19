@@ -4,6 +4,7 @@ import lk.oshanh.credit.dto.LoginResponseDTO;
 import lk.oshanh.credit.dto.Web3LoginRequest;
 import lk.oshanh.credit.entity.User;
 import lk.oshanh.credit.repository.UserRepository;
+import lk.oshanh.credit.utils.Web3Verifier;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +16,20 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 @Service
 @RequiredArgsConstructor
 public class Web3LoginService {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(Web3LoginService.class);
 
+    public boolean verifySignature(Web3LoginRequest request) {
+        String address = request.getAddress();
+        String signature = request.getSignature();
+        String message = request.getMessage();
+        return Web3Verifier.verifySignature(address, message, signature);
+    }
 
     public boolean verifyWithNode(Web3LoginRequest request){
         String address = request.getAddress();

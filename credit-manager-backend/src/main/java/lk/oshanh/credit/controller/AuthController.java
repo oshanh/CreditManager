@@ -17,10 +17,11 @@ public class AuthController {
 
     private final Web3LoginService web3LoginService;
 
-    @PostMapping("/web3")
+    @PostMapping("/web3login")
     public ResponseEntity<LoginResponseDTO> loginWithWeb3(@RequestBody Web3LoginRequest request, HttpSession session) {
 
-        boolean isValid=web3LoginService.verifyWithNode(request);
+        //boolean isValid=web3LoginService.verifyWithNode(request);
+        boolean isValid=web3LoginService.verifySignature(request);
 
 
 
@@ -36,4 +37,11 @@ public class AuthController {
 
 
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok("Logout successful");
+    }
+
 }

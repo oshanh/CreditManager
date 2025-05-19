@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping("/api/v1/debtors")
 
 public class CustomerController {
 
@@ -21,11 +21,12 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CustomerDTO> createCustomer(
-            @RequestPart("customer") CustomerDTO customerDTO,
+    public ResponseEntity<CustomerDTO> createDebtor(
+            @RequestPart("debtor") CustomerDTO customerDTO,
             @RequestPart(value = "file", required = false) MultipartFile file,
             HttpSession session) {
 
+        System.out.println("\n"+customerDTO+"\n");
         Long userId = (Long) session.getAttribute("userId");
         System.out.println("\ngetting userId : " + session.getAttribute("userId") + "\n");
 

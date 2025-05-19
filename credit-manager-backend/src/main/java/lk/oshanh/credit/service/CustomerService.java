@@ -69,7 +69,7 @@ public class CustomerService {
     System.out.println("Found " + customers.size() + " customers for user ID: " + userId);
     return customers.stream()
             .map(CustomerMapper::toDTO)
-            .peek(dto -> System.out.println("Mapped customer to DTO: " + dto))
+            //.peek(dto -> System.out.println("Mapped customer to DTO: " + dto))
             .collect(Collectors.toList());
 }
 
