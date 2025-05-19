@@ -53,6 +53,29 @@ const debtorService = {
       console.error('Error deleting debtor:', error);
       throw error;
     }
+  },
+
+  getProfilePhotoUrl(filename) {
+    if (!filename) return null;
+    // Extract the filename from the full path if it's in the old format
+    const actualFilename = filename.split('/').pop();
+    return `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/customers/${actualFilename}`;
+  },
+
+  // Helper method to get secure file URL with auth header
+  getSecureFileUrl(filename) {
+    if (!filename) return null;
+    const actualFilename = filename.split('/').pop();
+    const url = `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/customers/${actualFilename}`;
+    
+    // Create a URL object that includes the auth token
+    const secureUrl = new URL(url);
+    const token = localStorage.getItem('token');
+    if (token) {
+      secureUrl.searchParams.append('token', token);
+    }
+    
+    return secureUrl.toString();
   }
 };
 

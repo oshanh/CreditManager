@@ -23,8 +23,6 @@ const DebtorsPage = () => {
         setError(null);
         const response = await debtorService.getAllDebtors();
         setDebtors(response);
-        console.log(response);
-
       } catch (err) {
         setError(err.message);
       } finally {
@@ -51,6 +49,36 @@ const DebtorsPage = () => {
     debtor.address.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
     debtor.contactNumber.includes(debouncedSearchTerm)
   );
+
+  const renderProfileImage = (debtor) => {
+    if (!debtor.profilePhotoPath) {
+      return (
+        <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
+          <span className="text-lg font-bold">{debtor.customerName?.charAt(0) || '?'}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="h-10 w-10 rounded-full overflow-hidden">
+        <img
+          src={debtorService.getSecureFileUrl(debtor.profilePhotoPath)}
+          alt={debtor.customerName}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            const parent = e.target.parentElement;
+            if (parent) {
+              parent.innerHTML = `
+                <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                  <span class="text-lg font-bold">${debtor.customerName?.charAt(0) || '?'}</span>
+                </div>
+              `;
+            }
+          }}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -108,17 +136,7 @@ const DebtorsPage = () => {
                 {filteredDebtors.map((debtor) => (
                   <tr key={debtor.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td className="px-6 py-4 whitespace-nowrap w-[64px]" style={{width: '64px'}}>
-                      {debtor.profilePhotoPath ? (
-                        <img
-                          src={API_BASE_URL + debtor.profilePhotoPath}
-                          alt={debtor.customerName}
-                          className="h-10 w-10 rounded-full object-cover border dark:border-gray-600"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
-                          <span className="text-lg font-bold">{debtor.customerName?.charAt(0) || '?'}</span>
-                        </div>
-                      )}
+                      {renderProfileImage(debtor)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white w-[180px]" style={{width: '180px'}}>{debtor.customerName}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 w-[140px]" style={{width: '140px'}}>{formatPhoneNumber(debtor.contactNumber)}</td>
