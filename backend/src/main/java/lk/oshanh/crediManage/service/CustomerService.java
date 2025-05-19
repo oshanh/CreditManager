@@ -1,11 +1,15 @@
 package lk.oshanh.crediManage.service;
 
 import lk.oshanh.crediManage.dto.CustomerDTO;
+import lk.oshanh.crediManage.dto.LoginResponseDTO;
+import lk.oshanh.crediManage.dto.RegisterRequest;
 import lk.oshanh.crediManage.entity.Customer;
 import lk.oshanh.crediManage.entity.User;
 import lk.oshanh.crediManage.mapper.CustomerMapper;
 import lk.oshanh.crediManage.repository.CustomerRepository;
 import lk.oshanh.crediManage.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,11 +17,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class CustomerService {
 
@@ -26,15 +32,35 @@ public class CustomerService {
 
     private final UserRepository userRepository;
 
-    public CustomerService(CustomerRepository customerRepository, UserRepository userRepository) {
-        this.customerRepository = customerRepository;
-        this.userRepository = userRepository;
+    private final PasswordEncoder passwordEncoder; // must be configured as a Bean
 
+
+    public LoginResponseDTO registerNormalUser(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered");
+        }
+
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword())); // hash the password
+        user.setNickname(request.getNickname());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setAddress(null); // since it's not a Web3 user
+
+        User saved = userRepository.save(user);
+
+        LoginResponseDTO response = new LoginResponseDTO();
+        response.setSuccess(true);
+        response.setId(saved.getUid());
+        response.setNickname(saved.getNickname());
+        return response;
     }
+
+
 
     // Create a new customer
     public CustomerDTO createCustomer(CustomerDTO customerDTO, MultipartFile file,Long userId) {
-        User user = userRepository.findById(String.valueOf(userId))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Customer customer = CustomerMapper.toEntity(customerDTO);

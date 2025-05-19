@@ -16,6 +16,7 @@ public class User {
     private Long uid;
     private String address; // Ethereum address as the unique ID
     private String email;
+    private String password;
     private String nickname;
     private LocalDateTime createdAt;
 }
