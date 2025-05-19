@@ -1,34 +1,46 @@
+version: '3.8'
+
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:8080
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/creditmanager?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - mysql
+
   mysql:
     image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: RashmiTyre
-      MYSQL_DATABASE: credit
-      MYSQL_USER: credit_user
-      MYSQL_PASSWORD: RashmiTyre
     ports:
       - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=creditmanager
+      - MYSQL_ROOT_PASSWORD=root
     volumes:
       - mysql_data:/var/lib/mysql
 
-  frontend:
-    build: ./credit-manager-frontend
-    image: credit-manager-frontend
-    ports:
-      - 3000:3000  # Expose frontend on localhost:5173
-
-  backend:
-    build: ./credit-manager-backend 
-    image: credit-manager-backend
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/credit?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: credit_user
-      SPRING_DATASOURCE_PASSWORD: RashmiTyre
-    depends_on:
-      - mysql
-    ports:
-      - 8081:8081  # Expose backend on localhost:8081    
-
 volumes:
   mysql_data:
-      
