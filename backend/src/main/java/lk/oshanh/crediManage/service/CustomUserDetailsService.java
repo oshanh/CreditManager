@@ -27,13 +27,16 @@ public class CustomUserDetailsService implements UserDetailsService {
                             .orElseThrow(() -> new UsernameNotFoundException("User not found with email/address: " + username));
                 });
 
-        // For Web3 users (those with an address but no password), use a placeholder password
+        System.out.println("\n UserName:"+user+" \n");
+
+        String usernameToUse = user.getEmail() != null ? user.getEmail() : user.getAddress();
         String password = user.getPassword() != null ? user.getPassword() : "{noop}web3-user";
-        
+
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+                usernameToUse,
                 password,
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
+
     }
 } 

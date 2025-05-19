@@ -22,7 +22,8 @@ public class SecurityUtils {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userRepository.findByEmail(userDetails.getUsername())
-                .orElse(null);
+                .orElseGet(() -> (userRepository.findByAddress(userDetails.getUsername()))
+                .orElse(null));
     }
 
     public Long getCurrentUserId() {

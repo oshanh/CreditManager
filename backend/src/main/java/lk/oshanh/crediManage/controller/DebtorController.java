@@ -36,7 +36,9 @@ public class DebtorController {
 
     @GetMapping
     public ResponseEntity<List<CustomerDTO>> getAllDebtors() {
+        System.out.println("\ninside Controller\nCurrent user ID: " + securityUtils.getCurrentUserId()+"\n");
         Long userId = securityUtils.getCurrentUserId();
+
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
