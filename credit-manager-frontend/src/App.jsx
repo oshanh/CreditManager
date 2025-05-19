@@ -1,48 +1,32 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { CssBaseline, ThemeProvider, Container } from "@mui/material";
-import CustomerPage from "./pages/CustomerPage";
-import CreditPage from "./pages/CreditPage";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Welcome from "./pages/Welcome";
-import Debtors from "./pages/Debtors";
-import darkTheme from "./utils/Theme";
-import Navbar from "./components/Navbar";
-import Debtor from "./pages/Debtor";
-import CreateAccount from "./pages/CreateAccount";
+import { Routes, Route } from 'react-router-dom'
+import { ROUTES } from './constants/routes'
+import MainLayout from './components/layout/MainLayout'
+import Login from './pages/auth/Login'
+import Dashboard from './pages/Dashboard/Dashboard'
+import AddDebtorPage from './pages/Debtors/AddDebtorPage'
+import DebtorsPage from './pages/Debtors/DebtorsPage'
+import Welcome from './pages/Welcome'
+import Transactions from './pages/Transactions'
+import Reports from './pages/Reports'
+import Documents from './pages/Documents'
+import Notifications from './pages/Notifications'
 
 function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          {/* Welcome page without navbar */}
-          <Route path="/" element={<Welcome />} />
-          
-          
-          {/* Routes with navbar */}
-          <Route path="/*" element={
-            <>
-              <Navbar />
-              <Container maxWidth="lg" sx={{ paddingBottom: 4, marginTop: 4 }}>
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/create-account" element={<CreateAccount />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/debtors" element={<Debtors />} />
-                  <Route path="/debtor/:debtorId" element={<Debtor />} />
-                  <Route path="/credits/:customerId" element={<CreditPage />} />
-                  <Route path="/customer" element={<CustomerPage />} />
-                </Routes>
-              </Container>
-            </>
-          } />
-        </Routes>
-      </Router>
-    </ThemeProvider>
-  );
+    <Routes>
+      <Route path="/" element={<Welcome />} />
+      <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route element={<MainLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/debtors" element={<DebtorsPage />} />
+        <Route path="/debtors/add" element={<AddDebtorPage />} />
+        <Route path={ROUTES.TRANSACTIONS} element={<Transactions />} />
+        <Route path={ROUTES.REPORTS} element={<Reports />} />
+        <Route path={ROUTES.DOCUMENTS} element={<Documents />} />
+        <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
+      </Route>
+    </Routes>
+  )
 }
 
-export default App;
+export default App
