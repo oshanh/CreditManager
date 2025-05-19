@@ -75,7 +75,8 @@ const Register = () => {
     
     try {
       const response = await authService.register(formData);
-      if (response.success) {
+      console.log('Registration response:', response);
+      if (response.authenticated) {
         navigate('/login');
       } else {
         setErrors({ general: response.message || 'Registration failed. Please try again.' });

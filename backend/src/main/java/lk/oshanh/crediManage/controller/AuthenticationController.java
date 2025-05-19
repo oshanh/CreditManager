@@ -1,0 +1,44 @@
+package lk.oshanh.crediManage.controller;
+
+import jakarta.validation.Valid;
+import lk.oshanh.crediManage.dto.AuthResponse;
+import lk.oshanh.crediManage.dto.LoginRequest;
+import lk.oshanh.crediManage.dto.RegisterRequest;
+import lk.oshanh.crediManage.dto.Web3LoginRequest;
+import lk.oshanh.crediManage.service.AuthenticationService;
+import lk.oshanh.crediManage.service.TokenBlacklistService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
+public class AuthenticationController {
+    private final AuthenticationService authenticationService;
+    private final TokenBlacklistService tokenBlacklistService;
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authenticationService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authenticationService.login(request));
+    }
+
+    @PostMapping("/web3-login")
+    public ResponseEntity<AuthResponse> web3Login(@Valid @RequestBody Web3LoginRequest request) {
+        return ResponseEntity.ok(authenticationService.web3Login(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            tokenBlacklistService.blacklistToken(token);
+        }
+        return ResponseEntity.ok().build();
+    }
+} 

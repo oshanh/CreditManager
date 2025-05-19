@@ -64,11 +64,8 @@ const Login = () => {
     
     try {
       const response = await authService.login(formData);
-      if (response.success) {
-        login({
-          id: response.id,
-          nickname: response.nickname
-        });
+      if (response.authenticated) {
+        
         navigate('/dashboard');
       } else {
         setErrors({ general: response.message || 'Login failed. Please try again.' });
@@ -102,7 +99,7 @@ const Login = () => {
             const loginResponse = await authService.web3Login(address, message, signature);
             console.log("Web3 login response:", loginResponse);
     
-            if (loginResponse.success) {
+            if (loginResponse.token) {
                 login({
                     id: loginResponse.id,
                     nickname: loginResponse.nickname
