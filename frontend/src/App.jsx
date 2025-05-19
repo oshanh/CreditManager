@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { ROUTES } from './constants/routes'
 import MainLayout from './components/layout/MainLayout'
 import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
 import Dashboard from './pages/Dashboard/Dashboard'
 import AddDebtorPage from './pages/Debtors/AddDebtorPage'
 import DebtorsPage from './pages/Debtors/DebtorsPage'
@@ -16,6 +17,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Welcome />} />
       <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route path={ROUTES.REGISTER} element={<Register />} />
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/debtors" element={<DebtorsPage />} />
