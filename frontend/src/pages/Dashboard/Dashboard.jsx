@@ -81,7 +81,7 @@ const Dashboard = () => {
     <div className="h-full bg-gray-50 dark:bg-gray-900 px-4 py-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Debtor Manager</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">Dashboard</h1>
       </div>
 
       {/* Stats Grid */}

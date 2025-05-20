@@ -1,26 +1,33 @@
 import { useEffect, useRef } from 'react';
 
-const useClickOutside = (handler) => {
-  const ref = useRef();
+function useClickOutside(callback, excludeRefs = []) {
+  const ref = useRef(null);
 
   useEffect(() => {
-    const listener = (event) => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
+    const handleClickOutside = (event) => {
+      // Check if the click is inside the main ref element or any of the excluded refs
+      const isInsideClickArea = (
+        ref.current && ref.current.contains(event.target)
+      ) || (
+        excludeRefs.some(excludeRef => 
+          excludeRef.current && excludeRef.current.contains(event.target)
+        )
+      );
+
+      // If the click is outside the entire click area, call the callback
+      if (!isInsideClickArea) {
+        callback();
       }
-      handler(event);
     };
 
-    document.addEventListener('mousedown', listener);
-    document.addEventListener('touchstart', listener);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', listener);
-      document.removeEventListener('touchstart', listener);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [handler]);
+  }, [callback, excludeRefs]); // Add excludeRefs to dependency array
 
   return ref;
-};
+}
 
 export default useClickOutside; 

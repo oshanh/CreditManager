@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation ,useNavigate} from 'react-router-dom';
 import { 
   Home, 
@@ -19,6 +19,7 @@ import { ROUTES } from '../../constants/routes';
 import { useUser } from '../../context/UserContext';
 import { useTheme } from '../../context/ThemeContext';
 import authService from '../../services/authService';
+import useClickOutside from '../../hooks/useClickOutside';
 
 
 const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
@@ -28,12 +29,16 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
   const { user, logout } = useUser();
   const { isDarkMode, toggleTheme } = useTheme();
 
+  // Refs for handling outside clicks
+  const userMenuButtonRef = useRef(null); // Add ref for the user menu button
+
   const navigation = [
     { name: 'Dashboard', href: ROUTES.DASHBOARD, icon: Home },
     { name: 'Debtors', href: ROUTES.DEBTORS, icon: Users },
     { name: 'Transactions', href: ROUTES.TRANSACTIONS, icon: DollarSign },
     { name: 'Reports', href: ROUTES.REPORTS, icon: BarChart2 },
     { name: 'Documents', href: ROUTES.DOCUMENTS, icon: FileText },
+    
    
   ];
 
@@ -43,15 +48,23 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
     navigate(ROUTES.LOGIN);
   };
 
+  // Use the custom hook to close the user menu on outside clicks
+  const userMenuRef = useClickOutside(() => {
+    setIsUserMenuOpen(false);
+  }, [userMenuButtonRef]); // Pass the button ref to exclude
+
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="lg:hidden fixed top-8 left-4 z-50">
         <button
           onClick={() => onClose(!isOpen)}
-          className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+          className=" rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
         >
-          <Menu className="h-6 w-6" />
+          {!isOpen ?
+              <ChevronRight className="h-8 w-8" />:
+              <ChevronLeft className="h-8 w-8" />
+              }
         </button>
       </div>
 
@@ -71,34 +84,23 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
       >
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
-          <div className="flex-shrink-0 flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700">
-            {!isCollapsed && (
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Debit Manager</h1>
-            )}
+          <div className="flex-shrink-0 flex items-center h-24 px-2 ml-2 border-b border-gray-200 dark:border-gray-700">
+            {/* Collapse Button */}
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="hidden lg:flex p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className=" rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 mr-2 hidden lg:flex"
             >
-              {isCollapsed ? (
-                <ChevronRight className="h-6 w-6" />
-              ) : (
-                <ChevronLeft className="h-6 w-6" />
-              )}
+              {isCollapsed ?
+              <ChevronRight className=" h-8 w-8" />:
+              <ChevronLeft className=" h-8 w-8" />
+              }
             </button>
-          </div>
+            {!isCollapsed && (
+              isOpen ?
+              <h1 className="ml-9 text-2xl font-bold text-gray-900 dark:text-white">Debit Manager</h1>:
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Debit Manager</h1>
 
-          {/* Search Bar */}
-          <div className="flex-shrink-0 px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
+            )}
           </div>
 
           {/* Scrollable Area */}
@@ -153,9 +155,10 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
           </div>
 
           {/* User Menu */}
-          <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 z-50">
             <div className="relative">
               <button
+                ref={userMenuButtonRef}
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className="w-full flex items-center"
               >
@@ -174,8 +177,11 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
                 )}
               </button>
 
-              {isUserMenuOpen && !isCollapsed && (
-                <div className="absolute bottom-full left-0 mb-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+              {isUserMenuOpen  && (
+                <div 
+                  ref={userMenuRef}
+                  className="absolute bottom-full left-0 mb-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                >
                   <a
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
