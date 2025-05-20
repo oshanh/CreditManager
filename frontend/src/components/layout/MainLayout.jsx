@@ -8,7 +8,7 @@ const MainLayout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar isOpen={isSidebarOpen} onClose={setIsSidebarOpen} />
       
       <div className="flex-1 min-h-screen">
         <main className="h-full">
