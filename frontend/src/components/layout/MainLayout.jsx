@@ -17,7 +17,7 @@ const MainLayout = () => {
         setIsCollapsed={setIsCollapsed}
       />
       
-      <div className={`flex-1 min-h-screen ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
+      <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
         <Navbar />
         <main className="h-full">
           <Outlet />
