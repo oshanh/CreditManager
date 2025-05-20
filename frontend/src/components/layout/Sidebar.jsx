@@ -56,7 +56,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-8 left-4 z-50">
+      <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => onClose(!isOpen)}
           className=" rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
@@ -84,7 +84,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
       >
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
-          <div className="flex-shrink-0 flex items-center h-24 px-2 ml-2 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex-shrink-0 flex items-center h-16 px-2 ml-2 border-b border-gray-200 dark:border-gray-700">
             {/* Collapse Button */}
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
@@ -129,80 +129,6 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
                 );
               })}
             </nav>
-
-            {/* Theme Toggle */}
-            <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-              <button
-                onClick={toggleTheme}
-                className="w-full flex items-center px-2 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white"
-              >
-                {isDarkMode ? (
-                  <Sun className="mr-3 h-6 w-6 text-gray-400 dark:text-gray-500" />
-                ) : (
-                  <Moon className="mr-3 h-6 w-6 text-gray-400 dark:text-gray-500" />
-                )}
-                {!isCollapsed && <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>}
-              </button>
-            </div>
-
-            {/* Notifications */}
-            <div className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-              <button className="w-full flex items-center px-2 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
-                <Bell className="mr-3 h-6 w-6 text-gray-400 dark:text-gray-500" />
-                {!isCollapsed && <span>Notifications</span>}
-              </button>
-            </div>
-          </div>
-
-          {/* User Menu */}
-          <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 z-50">
-            <div className="relative">
-              <button
-                ref={userMenuButtonRef}
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="w-full flex items-center"
-              >
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {user?.nickname?.charAt(0) || 'U'}
-                    </span>
-                  </div>
-                </div>
-                {!isCollapsed && (
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{user?.nickname || 'User'}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || 'user@example.com'}</p>
-                  </div>
-                )}
-              </button>
-
-              {isUserMenuOpen  && (
-                <div 
-                  ref={userMenuRef}
-                  className="absolute bottom-full left-0 mb-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                >
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Your Profile
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Settings
-                  </a>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </aside>
