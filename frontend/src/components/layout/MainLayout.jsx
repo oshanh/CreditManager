@@ -5,12 +5,18 @@ import Sidebar from './Sidebar';
 
 const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
-      <Sidebar isOpen={isSidebarOpen} onClose={setIsSidebarOpen} />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={setIsSidebarOpen}
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+      />
       
-      <div className="flex-1 min-h-screen">
+      <div className={`flex-1 min-h-screen ${isCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
         <main className="h-full">
           <Outlet />
         </main>

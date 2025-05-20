@@ -26,9 +26,6 @@ const AddDebtorForm = ({ onSuccess }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [formErrors, setFormErrors] = useState({});
 
-  const debouncedPhone = useDebounce(formData.phone, 300);
-  const [token] = useLocalStorage(config.auth.tokenKey, null);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;

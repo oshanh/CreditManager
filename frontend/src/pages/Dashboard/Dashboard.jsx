@@ -54,6 +54,21 @@ const Dashboard = () => {
     { name: 'Michael Brown', amount: 650, status: 'Active', due: '2025-06-22' },
     { name: 'Emily Davis', amount: 320, status: 'Paid', due: '2025-05-05' },
     { name: 'Robert Wilson', amount: 975, status: 'Active', due: '2025-06-30' },
+    { name: 'John Smith', amount: 850, status: 'Active', due: '2025-06-15' },
+    { name: 'Sarah Johnson', amount: 1200, status: 'Overdue', due: '2025-05-10' },
+    { name: 'Michael Brown', amount: 650, status: 'Active', due: '2025-06-22' },
+    { name: 'Emily Davis', amount: 320, status: 'Paid', due: '2025-05-05' },
+    { name: 'Robert Wilson', amount: 975, status: 'Active', due: '2025-06-30' },
+    { name: 'John Smith', amount: 850, status: 'Active', due: '2025-06-15' },
+    { name: 'Sarah Johnson', amount: 1200, status: 'Overdue', due: '2025-05-10' },
+    { name: 'Michael Brown', amount: 650, status: 'Active', due: '2025-06-22' },
+    { name: 'Emily Davis', amount: 320, status: 'Paid', due: '2025-05-05' },
+    { name: 'Robert Wilson', amount: 975, status: 'Active', due: '2025-06-30' },
+    { name: 'John Smith', amount: 850, status: 'Active', due: '2025-06-15' },
+    { name: 'Sarah Johnson', amount: 1200, status: 'Overdue', due: '2025-05-10' },
+    { name: 'Michael Brown', amount: 650, status: 'Active', due: '2025-06-22' },
+    { name: 'Emily Davis', amount: 320, status: 'Paid', due: '2025-05-05' },
+    { name: 'Robert Wilson', amount: 975, status: 'Active', due: '2025-06-30' },
   ];
 
   const statusStyles = {
