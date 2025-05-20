@@ -59,14 +59,14 @@ const debtorService = {
     if (!filename) return null;
     // Extract the filename from the full path if it's in the old format
     const actualFilename = filename.split('/').pop();
-    return `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/customers/${actualFilename}`;
+    return `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/debtors/${actualFilename}`;
   },
 
   // Helper method to get secure file URL with auth header
   getSecureFileUrl(filename) {
     if (!filename) return null;
     const actualFilename = filename.split('/').pop();
-    const url = `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/customers/${actualFilename}`;
+    const url = `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/debtors/${actualFilename}`;
     
     // Create a URL object that includes the auth token
     const secureUrl = new URL(url);

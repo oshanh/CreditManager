@@ -3,11 +3,11 @@ package lk.oshanh.crediManage.service;
 import jakarta.transaction.Transactional;
 import lk.oshanh.crediManage.dto.CreditDTO;
 import lk.oshanh.crediManage.entity.Credit;
-import lk.oshanh.crediManage.entity.Customer;
+import lk.oshanh.crediManage.entity.Debtor;
 import lk.oshanh.crediManage.mapper.CreditMapper;
-import lk.oshanh.crediManage.mapper.CustomerMapper;
+import lk.oshanh.crediManage.mapper.DebtorMapper;
 import lk.oshanh.crediManage.repository.CreditRepository;
-import lk.oshanh.crediManage.repository.CustomerRepository;
+import lk.oshanh.crediManage.repository.DebtorRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +20,16 @@ public class CreditService {
 
     private final CreditRepository creditRepository;
 
-    private final CustomerRepository customerRepository;
+    private final DebtorRepository debtorRepository;
 
     private final SimpMessagingTemplate messagingTemplate;
 
 
-    private CustomerMapper customerMapper=new CustomerMapper();
+    private DebtorMapper debtorMapper =new DebtorMapper();
 
-    public CreditService(CreditRepository creditRepository, CustomerRepository customerRepository, SimpMessagingTemplate messagingTemplate) {
+    public CreditService(CreditRepository creditRepository, DebtorRepository debtorRepository, SimpMessagingTemplate messagingTemplate) {
         this.creditRepository = creditRepository;
-        this.customerRepository = customerRepository;
+        this.debtorRepository = debtorRepository;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -37,16 +37,16 @@ public class CreditService {
     @Transactional
     public CreditDTO createCredit(CreditDTO creditDTO) {
         // Fetch customer by ID (without custom exception handling)
-        Customer customer = customerRepository.findById(creditDTO.getCustomerId()).orElse(null);
+        Debtor debtor = debtorRepository.findById(creditDTO.getDebtorId()).orElse(null);
 
-        if (customer == null) {
+        if (debtor == null) {
             // If customer not found, return null or handle appropriately (like returning a message)
             return null;  // You can adjust this behavior based on your needs
         }
 
         // Convert CreditDTO to Credit entity
         Credit credit = CreditMapper.toEntity(creditDTO);
-        credit.setCustomer(customer);  // Set the customer in the credit object
+        credit.setDebtor(debtor);  // Set the customer in the credit object
 
         // Save the credit entity
         credit = creditRepository.save(credit);
@@ -94,19 +94,19 @@ public class CreditService {
 //        //return customerDTO.getContactNumber();
 //
 //    }
-public String getCustomerPhoneNumber(Long customerId) {
-    Customer customer=customerRepository.findCustomerById(customerId);
-    System.out.println("\n CN : "+customer.getContactNumber()+"\n");
+public String getCustomerPhoneNumber(Long debtorId) {
+    Debtor debtor = debtorRepository.findDebtorById(debtorId);
+    System.out.println("\n CN : "+ debtor.getContactNumber()+"\n");
     // This is a dummy implementation, replace with actual logic to get customer phone
-    return customer.getContactNumber();  // Replace with the customer's phone number
+    return debtor.getContactNumber();  // Replace with the customer's phone number
 }
 
     // Get credit description by creditId (implement based on your DB structure)
-    public String getCreditDescription(Long creditId,Long customerId) {
+    public String getCreditDescription(Long creditId,Long debtorId) {
         // This is a dummy implementation, replace with actual logic to get credit description
         Credit credit=creditRepository.findCreditById(creditId);
-        Customer customer=customerRepository.findCustomerById(customerId);
-        String msg="Dear "+customer.getCustomerName() +",\n"
+        Debtor debtor = debtorRepository.findDebtorById(debtorId);
+        String msg="Dear "+ debtor.getDebtorName() +",\n"
                     +"You have to pay Rs." +credit.getCreditAmount() +"\n Before "
                     +credit.getDueDate();
         System.out.println(msg);

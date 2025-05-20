@@ -10,23 +10,23 @@ import java.util.List;
 @Entity
 @Data  // Lombok annotation to generate getters, setters, toString, equals, hashCode methods
 @NoArgsConstructor  // Lombok annotation to generate a no-args constructor
-public class Customer {
+public class Debtor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerName;
+    private String debtorName;
     private String contactNumber;
     private String address;
     private String profilePhotoPath;
     private double totalBalance;
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "debtor", cascade = CascadeType.ALL)
     private List<Credit> credits;
 
-    @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "debtor" , cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
     @ManyToOne

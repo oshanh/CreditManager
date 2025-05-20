@@ -1,12 +1,12 @@
 package lk.oshanh.crediManage.service;
 
-import lk.oshanh.crediManage.dto.CustomerDTO;
+import lk.oshanh.crediManage.dto.DebtorDTO;
 import lk.oshanh.crediManage.dto.LoginResponseDTO;
 import lk.oshanh.crediManage.dto.RegisterRequest;
-import lk.oshanh.crediManage.entity.Customer;
+import lk.oshanh.crediManage.entity.Debtor;
 import lk.oshanh.crediManage.entity.User;
-import lk.oshanh.crediManage.mapper.CustomerMapper;
-import lk.oshanh.crediManage.repository.CustomerRepository;
+import lk.oshanh.crediManage.mapper.DebtorMapper;
+import lk.oshanh.crediManage.repository.DebtorRepository;
 import lk.oshanh.crediManage.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class CustomerService {
+public class DebtorService {
 
 
-    private final CustomerRepository customerRepository;
+    private final DebtorRepository debtorRepository;
 
     private final UserRepository userRepository;
 
@@ -58,17 +58,17 @@ public class CustomerService {
 
 
 
-    // Create a new customer
-    public CustomerDTO createCustomer(CustomerDTO customerDTO, MultipartFile file,Long userId) {
+    // Create a new debtor
+    public DebtorDTO createDebtor(DebtorDTO debtorDTO, MultipartFile file, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Customer customer = CustomerMapper.toEntity(customerDTO);
-        customer.setUser(user);
+        Debtor debtor = DebtorMapper.toEntity(debtorDTO);
+        debtor.setUser(user);
 
         if (file != null && !file.isEmpty()) {
             try {
-                String uploadDir = "uploads/customers";
+                String uploadDir = "uploads/debtors";
                 Files.createDirectories(Paths.get(uploadDir));
 
                 String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
@@ -76,53 +76,53 @@ public class CustomerService {
                 Files.copy(file.getInputStream(), filePath);
 
                 // Save relative path
-                customer.setProfilePhotoPath("/uploads/customers/" + fileName);
+                debtor.setProfilePhotoPath("/uploads/debtors/" + fileName);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to store image", e);
             }
         }
 
-        customer = customerRepository.saveAndFlush(customer);
-        return CustomerMapper.toDTO(customer);
+        debtor = debtorRepository.saveAndFlush(debtor);
+        return DebtorMapper.toDTO(debtor);
     }
 
 
-    // Get all customers
-    public List<CustomerDTO> getCustomersByUserId(Long userId) {
-    System.out.println("Retrieving customers for user ID: " + userId);
-    List<Customer> customers = customerRepository.findCustomersByUser_Uid(userId);
-    System.out.println("Found " + customers.size() + " customers for user ID: " + userId);
-    return customers.stream()
-            .map(CustomerMapper::toDTO)
-            //.peek(dto -> System.out.println("Mapped customer to DTO: " + dto))
+    // Get all debtors
+    public List<DebtorDTO> getDebtorsByUserId(Long userId) {
+    System.out.println("Retrieving debtors for user ID: " + userId);
+    List<Debtor> debtors = debtorRepository.findDebtorsByUser_Uid(userId);
+    System.out.println("Found " + debtors.size() + " debtors for user ID: " + userId);
+    return debtors.stream()
+            .map(DebtorMapper::toDTO)
+            //.peek(dto -> System.out.println("Mapped debtor to DTO: " + dto))
             .collect(Collectors.toList());
 }
 
-public List<CustomerDTO> getCustomersByUserId1(Long userId) {
-        return customerRepository.findCustomersByUser_Uid(userId)
+public List<DebtorDTO> getDebtorsByUserId1(Long userId) {
+        return debtorRepository.findDebtorsByUser_Uid(userId)
                 .stream()
-                .map(CustomerMapper::toDTO)
+                .map(DebtorMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
 
-    // Get customer by ID
-    public Optional<CustomerDTO> getCustomerById(Long id) {
-        return customerRepository.findById(id)
-                .map(CustomerMapper::toDTO);
+    // Get debtor by ID
+    public Optional<DebtorDTO> getDebtorById(Long id) {
+        return debtorRepository.findById(id)
+                .map(DebtorMapper::toDTO);
     }
 
-    // Update customer
-    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
-        Customer existingCustomer = customerRepository.findById(id).orElseThrow();
-        existingCustomer.setCustomerName(customerDTO.getCustomerName());
-        existingCustomer.setContactNumber(customerDTO.getContactNumber());
-        existingCustomer = customerRepository.save(existingCustomer);
-        return CustomerMapper.toDTO(existingCustomer);
+    // Update debtor
+    public DebtorDTO updateDebtor(Long id, DebtorDTO debtorDTO) {
+        Debtor existingDebtor = debtorRepository.findById(id).orElseThrow();
+        existingDebtor.setDebtorName(debtorDTO.getDebtorName());
+        existingDebtor.setContactNumber(debtorDTO.getContactNumber());
+        existingDebtor = debtorRepository.save(existingDebtor);
+        return DebtorMapper.toDTO(existingDebtor);
     }
 
-    // Delete customer
-    public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
+    // Delete debtor
+    public void deleteDebtor(Long id) {
+        debtorRepository.deleteById(id);
     }
 }

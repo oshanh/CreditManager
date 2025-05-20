@@ -9,5 +9,5 @@ public class CreditDTO {
     private Double creditAmount;
     private String description;
     private LocalDate dueDate;
-    private Long customerId;  // Foreign key for Customer
+    private Long debtorId;
 }

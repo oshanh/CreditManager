@@ -1,8 +1,8 @@
 package lk.oshanh.crediManage.controller;
 
-import lk.oshanh.crediManage.dto.CustomerDTO;
+import lk.oshanh.crediManage.dto.DebtorDTO;
 import lk.oshanh.crediManage.security.SecurityUtils;
-import lk.oshanh.crediManage.service.CustomerService;
+import lk.oshanh.crediManage.service.DebtorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,12 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DebtorController {
 
-    private final CustomerService customerService;
+    private final DebtorService debtorService;
     private final SecurityUtils securityUtils;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CustomerDTO> createDebtor(
-            @RequestPart("debtor") CustomerDTO customerDTO,
+    public ResponseEntity<DebtorDTO> createDebtor(
+            @RequestPart("debtor") DebtorDTO debtorDTO,
             @RequestPart(value = "file", required = false) MultipartFile file) {
 
         Long userId = securityUtils.getCurrentUserId();
@@ -30,25 +30,25 @@ public class DebtorController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        CustomerDTO created = customerService.createCustomer(customerDTO, file, userId);
+        DebtorDTO created = debtorService.createDebtor(debtorDTO, file, userId);
         return ResponseEntity.ok(created);
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getAllDebtors() {
+    public ResponseEntity<List<DebtorDTO>> getAllDebtors() {
         System.out.println("\ninside Controller\nCurrent user ID: " + securityUtils.getCurrentUserId()+"\n");
         Long userId = securityUtils.getCurrentUserId();
 
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        List<CustomerDTO> customerDTOS = customerService.getCustomersByUserId(userId);
-        return ResponseEntity.ok(customerDTOS);
+        List<DebtorDTO> debtorDTOS = debtorService.getDebtorsByUserId(userId);
+        return ResponseEntity.ok(debtorDTOS);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDTO> getCustomer(@PathVariable Long id) {
-        return customerService.getCustomerById(id)
+    public ResponseEntity<DebtorDTO> getDebtor(@PathVariable Long id) {
+        return debtorService.getDebtorById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

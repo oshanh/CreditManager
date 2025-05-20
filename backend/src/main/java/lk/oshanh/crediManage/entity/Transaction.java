@@ -20,8 +20,8 @@ public class Transaction {
     private String date;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "debtor_id")
+    private Debtor debtor;
 
 
 }

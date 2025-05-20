@@ -20,8 +20,8 @@ public class Credit {
     private LocalDate dueDate;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;  // This is the reference to the Customer entity
+    @JoinColumn(name = "debtor_id")
+    private Debtor debtor;  // This is the reference to the debtor entity
 
     @OneToMany(mappedBy = "credit", cascade = CascadeType.ALL)
     private List<Repayment> repayments;  // List of repayments related to this credit

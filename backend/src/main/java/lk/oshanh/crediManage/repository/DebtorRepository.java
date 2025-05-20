@@ -1,15 +1,15 @@
 package lk.oshanh.crediManage.repository;
 
-import lk.oshanh.crediManage.entity.Customer;
+import lk.oshanh.crediManage.entity.Debtor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface DebtorRepository extends JpaRepository<Debtor, Long> {
     // You can define custom queries here if needed
-    Customer findCustomerById(Long Id);
+    Debtor findDebtorById(Long Id);
 
-    List<Customer> findCustomersByUser_Uid(Long userUid);
+    List<Debtor> findDebtorsByUser_Uid(Long userUid);
 }

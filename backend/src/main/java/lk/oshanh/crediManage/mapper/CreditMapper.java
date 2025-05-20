@@ -11,7 +11,7 @@ public class CreditMapper {
         dto.setCreditAmount(credit.getCreditAmount());
         dto.setDescription(credit.getDescription());
         dto.setDueDate(credit.getDueDate());
-        dto.setCustomerId(credit.getCustomer().getId());  // Mapping the customer ID
+        dto.setDebtorId(credit.getDebtor().getId());  // Mapping the customer ID
         return dto;
     }
 

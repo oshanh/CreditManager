@@ -45,7 +45,7 @@ const DebtorsPage = () => {
   };
 
   const filteredDebtors = debtors.filter(debtor => 
-    debtor.customerName.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+    debtor.debtorName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
     debtor.address.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
     debtor.contactNumber.includes(debouncedSearchTerm)
   );
@@ -54,7 +54,7 @@ const DebtorsPage = () => {
     if (!debtor.profilePhotoPath) {
       return (
         <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
-          <span className="text-lg font-bold">{debtor.customerName?.charAt(0) || '?'}</span>
+          <span className="text-lg font-bold">{debtor.debtorName?.charAt(0) || '?'}</span>
         </div>
       );
     }
@@ -63,14 +63,14 @@ const DebtorsPage = () => {
       <div className="h-10 w-10 rounded-full overflow-hidden">
         <img
           src={debtorService.getSecureFileUrl(debtor.profilePhotoPath)}
-          alt={debtor.customerName}
+          alt={debtor.debtorName}
           className="h-full w-full object-cover"
           onError={(e) => {
             const parent = e.target.parentElement;
             if (parent) {
               parent.innerHTML = `
                 <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
-                  <span class="text-lg font-bold">${debtor.customerName?.charAt(0) || '?'}</span>
+                  <span class="text-lg font-bold">${debtor.debtorName?.charAt(0) || '?'}</span>
                 </div>
               `;
             }
@@ -138,7 +138,7 @@ const DebtorsPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap w-[64px]" style={{width: '64px'}}>
                       {renderProfileImage(debtor)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white w-[180px]" style={{width: '180px'}}>{debtor.customerName}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white w-[180px]" style={{width: '180px'}}>{debtor.debtorName}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 w-[140px]" style={{width: '140px'}}>{formatPhoneNumber(debtor.contactNumber)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 w-[240px]" style={{width: '240px'}}>{debtor.address}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-white w-[120px]" style={{width: '120px'}}>{formatCurrency(debtor.totalBalance)}</td>

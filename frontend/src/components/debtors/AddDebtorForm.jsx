@@ -95,7 +95,7 @@ const AddDebtorForm = ({ onSuccess }) => {
     setIsLoading(true);
 
     const payload = {
-      customerName: formData.name,
+      debtorName: formData.name,
       email: formData.email,
       address: formData.address,
       contactNumber: formData.phone,
