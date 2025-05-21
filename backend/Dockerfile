@@ -1,14 +1,14 @@
-# Use OpenJDK 17 as base image
+# base image for running the application
 FROM openjdk:21-jdk-slim
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy your jar file to the container
-COPY target/credit-*.jar app.jar
+# Copy the build JAR file 
+COPY target/CrediManage-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Expose the port your app runs on
+# Expose the port on which the Spring Boot application will run
 EXPOSE 8081
 
-# Run the jar file
+# Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
