@@ -13,6 +13,7 @@ const Navbar = ({ onToggleSidebar }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
+  console.log('inside Navbar ',user);
   
   // Refs for handling outside clicks on the user menu
   const userMenuRef = useRef(null);
