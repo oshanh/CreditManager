@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://gitlab.com/oshanh/credimanager.git', credentialsId: 'credit_jenkins_access_token_3'
+                git branch: 'main', url: 'https://github.com/oshanh/DebitManager.git'
             }
         }
 
