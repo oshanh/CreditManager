@@ -36,9 +36,18 @@ const debtorService = {
    });
   },
 
-  updateDebtor: async (debtorId, debtorData) => {
+  updateDebtor: async (debtorId, debtorData, file) => {
     try {
-      const response = await apiClient.put(`${BASE_URL}/${debtorId}`, debtorData);
+      const formData = new FormData();
+      formData.append('debtor', new Blob([JSON.stringify(debtorData)], {
+        type: 'application/json'
+      }));
+      if (file) {
+        formData.append('file', file);
+      }
+      const response = await apiClient.put(`${BASE_URL}/${debtorId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       return response.data;
     } catch (error) {
       console.error('Error updating debtor:', error);

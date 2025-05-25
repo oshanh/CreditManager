@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping
     public String test() {
-        return "Backend is up and running check 1";
+        return "Backend is up and running check 2";
     }
 }

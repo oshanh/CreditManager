@@ -52,4 +52,20 @@ public class DebtorController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<DebtorDTO> updateDebtor(
+            @PathVariable Long id,
+            @RequestPart("debtor") DebtorDTO debtorDTO,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        
+        Long userId = securityUtils.getCurrentUserId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return debtorService.updateDebtor(id, debtorDTO, file, userId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
