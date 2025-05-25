@@ -17,15 +17,15 @@ public class RepaymentController {
     @Autowired
     private RepaymentService repaymentService;
 
-    @PostMapping("/{creditId}")
-    public ResponseEntity<RepaymentDTO> createRepayment(@PathVariable Long creditId, @RequestBody RepaymentDTO repaymentDTO) {
-        RepaymentDTO createdRepayment = repaymentService.addRepayment(creditId, repaymentDTO);
+    @PostMapping("/{debitId}")
+    public ResponseEntity<RepaymentDTO> createRepayment(@PathVariable Long debitId, @RequestBody RepaymentDTO repaymentDTO) {
+        RepaymentDTO createdRepayment = repaymentService.addRepayment(debitId, repaymentDTO);
         return new ResponseEntity<>(createdRepayment, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{creditId}")
-    public List<RepaymentDTO> getRepaymentsForCredit(@PathVariable Long creditId) {
-        return repaymentService.getRepaymentsForCredit(creditId);
+    @GetMapping("/{debitId}")
+    public List<RepaymentDTO> getRepaymentsForDebit(@PathVariable Long debitId) {
+        return repaymentService.getRepaymentsForDebit(debitId);
     }
 
     @PutMapping("/{id}")

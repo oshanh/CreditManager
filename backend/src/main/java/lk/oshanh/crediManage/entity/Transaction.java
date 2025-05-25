@@ -27,5 +27,5 @@ public class Transaction {
 }
 
 enum TransactionType {
-    CREDIT, DEBIT
+    IN, OUT
 }

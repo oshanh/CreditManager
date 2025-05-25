@@ -2,8 +2,8 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://www.oshanh.live/api/v1",
-  //baseURL: "http://localhost:8081/api/v1",
+  //baseURL: "https://www.oshanh.live/api/v1",
+  baseURL: "http://localhost:8081/api/v1",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

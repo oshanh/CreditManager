@@ -4,7 +4,7 @@ import lk.oshanh.credimanage.dto.RepaymentDTO;
 import lk.oshanh.credimanage.entity.Repayment;
 import lk.oshanh.credimanage.mapper.RepaymentMapper;
 import lk.oshanh.credimanage.repository.RepaymentRepository;
-import lk.oshanh.credimanage.repository.CreditRepository;
+import lk.oshanh.credimanage.repository.DebitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +18,19 @@ public class RepaymentService {
     private RepaymentRepository repaymentRepository;
 
     @Autowired
-    private CreditRepository creditRepository;
+    private DebitRepository debitRepository;
 
-    // Add repayment for a credit
-    public RepaymentDTO addRepayment(Long creditId, RepaymentDTO repaymentDTO) {
+    // Add repayment for a debit
+    public RepaymentDTO addRepayment(Long debitId, RepaymentDTO repaymentDTO) {
         Repayment repayment = RepaymentMapper.toEntity(repaymentDTO);
-        repayment.setCredit(creditRepository.findById(creditId).orElseThrow());
+        repayment.setDebit(debitRepository.findById(debitId).orElseThrow());
         repayment = repaymentRepository.save(repayment);
         return RepaymentMapper.toDTO(repayment);
     }
 
-    // Get repayments for a specific credit
-    public List<RepaymentDTO> getRepaymentsForCredit(Long creditId) {
-        return repaymentRepository.findByCreditId(creditId)
+    // Get repayments for a specific debit
+    public List<RepaymentDTO> getRepaymentsForDebit(Long debitId) {
+        return repaymentRepository.findByDebitId(debitId)
                 .stream()
                 .map(RepaymentMapper::toDTO)
                 .collect(Collectors.toList());

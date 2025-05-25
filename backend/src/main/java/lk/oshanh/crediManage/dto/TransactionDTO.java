@@ -17,5 +17,5 @@ public class TransactionDTO {
 
 // Proper enum definition
 enum TransactionType {
-    CREDIT, DEBIT
+    IN,OUT
 }

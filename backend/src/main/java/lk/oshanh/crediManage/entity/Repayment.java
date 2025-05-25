@@ -19,6 +19,6 @@ public class Repayment {
     private LocalDate repaymentDate;
 
     @ManyToOne
-    @JoinColumn(name = "credit_id")
-    private Credit credit;  // Reference to the Credit entity for which the repayment is made
+    @JoinColumn(name = "debit_id")
+    private Debit debit;  // Reference to the debit entity for which the repayment is made
 }

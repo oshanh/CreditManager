@@ -1,6 +1,6 @@
 package lk.oshanh.credimanage.service;
 
-import lk.oshanh.credimanage.repository.CreditRepository;
+import lk.oshanh.credimanage.repository.DebitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class ScheduledNotificationService {
 
     @Autowired
-    private CreditRepository creditRepository;
+    private DebitRepository debitRepository;
 
 //    @Autowired
 //    private WhatsAppService whatsAppService;
@@ -25,15 +25,15 @@ public class ScheduledNotificationService {
         // Get current date
         //Date currentDate = new Date();
 
-        // Get credits that are due in the next 5 minutes (you can adjust this timeframe as needed)
-        //List<Credit> creditsDueSoon = creditRepository.findAll();
+        // Get debits that are due in the next 5 minutes (you can adjust this timeframe as needed)
+        //List<Debit> debitsDueSoon = debitRepository.findAll();
 
-        // Send WhatsApp notifications for each due credit
-//        for (Credit credit : creditsDueSoon) {
+        // Send WhatsApp notifications for each due debit
+//        for (Debit debit : debitsDueSoon) {
 //            // Send message via WhatsApp
-//            String message = "Dear customer, your credit for " + credit.getDescription() + " is due soon. Please pay before " + credit.getDueDate() + ".\n"+"Credit Amount : Rs."+credit.getCreditAmount();
-//            whatsAppService.sendWhatsAppMessage(credit.getCustomer().getContactNumber(), message);
-//            System.out.println("Sent notification for credit: " + credit.getDescription());
+//            String message = "Dear customer, your debit for " + debit.getDescription() + " is due soon. Please pay before " + debit.getDueDate() + ".\n"+"Debit Amount : Rs."+debit.getDebitAmount();
+//            whatsAppService.sendWhatsAppMessage(debit.getCustomer().getContactNumber(), message);
+//            System.out.println("Sent notification for debit: " + debit.getDescription());
 //        }
     }
 }

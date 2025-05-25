@@ -24,7 +24,7 @@ public class Debtor {
     private String email;
 
     @OneToMany(mappedBy = "debtor", cascade = CascadeType.ALL)
-    private List<Credit> credits;
+    private List<Debit> debits;
 
     @OneToMany(mappedBy = "debtor" , cascade = CascadeType.ALL)
     private List<Transaction> transactions;

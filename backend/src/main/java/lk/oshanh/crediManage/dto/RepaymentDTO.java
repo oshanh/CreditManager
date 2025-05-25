@@ -8,5 +8,5 @@ public class RepaymentDTO {
     private Long id;
     private Double repaymentAmount;
     private LocalDate repaymentDate;
-    private Long creditId;  // Foreign key for Credit
+    private Long debitId;  // Foreign key for Debit
 }
