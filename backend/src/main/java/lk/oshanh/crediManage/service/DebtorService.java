@@ -122,4 +122,30 @@ public class DebtorService {
                     return DebtorMapper.toDTO(updatedDebtor);
                 });
     }
+
+    public boolean deleteDebtor(Long id, Long userId) {
+        return debtorRepository.findById(id)
+                .map(debtor -> {
+                    // Verify the debtor belongs to the user
+                    if (!debtor.getUser().getUid().equals(userId)) {
+                        throw new RuntimeException("Unauthorized to delete this debtor");
+                    }
+
+                    // Delete profile photo if exists
+                    if (debtor.getProfilePhotoPath() != null) {
+                        try {
+                            Path photoPath = Paths.get(debtor.getProfilePhotoPath());
+                            Files.deleteIfExists(photoPath);
+                        } catch (IOException e) {
+                            // Log the error but continue with deletion
+                            System.err.println("Failed to delete profile photo: " + e.getMessage());
+                        }
+                    }
+
+                    // Delete the debtor
+                    debtorRepository.delete(debtor);
+                    return true;
+                })
+                .orElse(false);
+    }
 }

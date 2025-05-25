@@ -6,6 +6,7 @@ import { formatCurrency, formatPhoneNumber } from '../../utils/format';
 import debtorService from '../../services/debtorService';
 import useDebounce from '../../hooks/useDebounce';
 import DebtorFormModal from '../../components/debtors/DebtorFormModal';
+import DeleteConfirmationModal from '../../components/common/DeleteConfirmationModal';
 import MessageAlert from '../../components/common/MessageAlert';
 
 const API_BASE_URL = 'http://localhost:8081';
@@ -18,6 +19,9 @@ const DebtorsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDebtor, setSelectedDebtor] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingDebtor, setDeletingDebtor] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -37,15 +41,30 @@ const DebtorsPage = () => {
     fetchDebtors();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this debtor?')) {
-      try {
-        await debtorService.deleteDebtor(id);
-        setDebtors(debtors.filter(debtor => debtor.id !== id));
-      } catch (err) {
-        setError('Failed to delete debtor');
-        console.error('Error deleting debtor:', err);
-      }
+  const handleDeleteClick = (debtor) => {
+    setDeletingDebtor(debtor);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingDebtor) return;
+
+    setIsDeleting(true);
+    try {
+      await debtorService.deleteDebtor(deletingDebtor.id);
+      setDebtors(debtors.filter(d => d.id !== deletingDebtor.id));
+      setAlert({
+        show: true,
+        message: 'Debtor deleted successfully',
+        type: 'error'
+      });
+      setIsDeleteModalOpen(false);
+    } catch (err) {
+      setError('Failed to delete debtor');
+      console.error('Error deleting debtor:', err);
+    } finally {
+      setIsDeleting(false);
+      setDeletingDebtor(null);
     }
   };
 
@@ -193,7 +212,7 @@ const DebtorsPage = () => {
                           <Edit className="w-5 h-5" />
                         </button>
                         <button
-                          onClick={() => handleDelete(debtor.id)}
+                          onClick={() => handleDeleteClick(debtor)}
                           className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                         >
                           <Trash2 className="w-5 h-5" />
@@ -225,7 +244,7 @@ const DebtorsPage = () => {
                         <Edit className="w-5 h-5" />
                       </button>
                       <button
-                        onClick={() => handleDelete(debtor.id)}
+                        onClick={() => handleDeleteClick(debtor)}
                         className="p-2 text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                       >
                         <Trash2 className="w-5 h-5" />
@@ -258,6 +277,18 @@ const DebtorsPage = () => {
         }}
         debtor={selectedDebtor}
         onSuccess={() => handleModalSuccess(!!selectedDebtor)}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeletingDebtor(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Debtor"
+        message={`Are you sure you want to delete ${deletingDebtor?.debtorName}? This action cannot be undone.`}
+        isLoading={isDeleting}
       />
     </div>
   );
