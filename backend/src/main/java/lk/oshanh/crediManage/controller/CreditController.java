@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.controller;
+package lk.oshanh.credimanage.controller;
 
-import lk.oshanh.crediManage.dto.CreditDTO;
-import lk.oshanh.crediManage.service.CreditService;
+import lk.oshanh.credimanage.dto.CreditDTO;
+import lk.oshanh.credimanage.service.CreditService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

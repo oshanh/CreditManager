@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;

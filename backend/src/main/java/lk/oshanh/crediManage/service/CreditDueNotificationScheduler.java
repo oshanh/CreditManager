@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

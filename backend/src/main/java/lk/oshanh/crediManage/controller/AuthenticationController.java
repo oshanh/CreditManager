@@ -1,12 +1,12 @@
-package lk.oshanh.crediManage.controller;
+package lk.oshanh.credimanage.controller;
 
 import jakarta.validation.Valid;
-import lk.oshanh.crediManage.dto.AuthResponse;
-import lk.oshanh.crediManage.dto.LoginRequest;
-import lk.oshanh.crediManage.dto.RegisterRequest;
-import lk.oshanh.crediManage.dto.Web3LoginRequest;
-import lk.oshanh.crediManage.service.AuthenticationService;
-import lk.oshanh.crediManage.service.TokenBlacklistService;
+import lk.oshanh.credimanage.dto.AuthResponse;
+import lk.oshanh.credimanage.dto.LoginRequest;
+import lk.oshanh.credimanage.dto.RegisterRequest;
+import lk.oshanh.credimanage.dto.Web3LoginRequest;
+import lk.oshanh.credimanage.service.AuthenticationService;
+import lk.oshanh.credimanage.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

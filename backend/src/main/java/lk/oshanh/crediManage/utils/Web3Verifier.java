@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.utils;
+package lk.oshanh.credimanage.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

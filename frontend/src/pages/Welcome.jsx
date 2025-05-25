@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
 import { useUser } from '../context/UserContext';
+import DarkModeToggle from '../components/common/DarkModeToggle';
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Welcome = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <DarkModeToggle />
       <div className="max-w-md w-full text-center">
         <div className="mb-6">
           <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-200 rounded-full px-4 py-2 text-xs font-semibold mb-4">Welcome to</span>

@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.controller;
+package lk.oshanh.credimanage.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lk.oshanh.crediManage.security.JwtTokenProvider;
+import lk.oshanh.credimanage.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,7 +23,8 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final String uploadDir = System.getProperty("user.dir") + "/uploads";
+    //private final String uploadDir = System.getProperty("user.dir") + "/uploads";
+    private final String uploadDir ="/uploads";
 
     private final JwtTokenProvider tokenProvider;
 

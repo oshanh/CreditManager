@@ -1,6 +1,6 @@
-package lk.oshanh.crediManage.repository;
+package lk.oshanh.credimanage.repository;
 
-import lk.oshanh.crediManage.entity.Credit;
+import lk.oshanh.credimanage.entity.Credit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

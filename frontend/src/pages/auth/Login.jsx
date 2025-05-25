@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import { ethers } from 'ethers';
 import { useUser } from '../../context/UserContext';
+import DarkModeToggle from '../../components/common/DarkModeToggle';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ const Login = () => {
                 setErrors({ general: 'Web3 login failed. Please try again.' });
             }
         } catch (error) {
-            console.error("❌ Error during Web3 login:", error);
+            console.error(" Error during Web3 login:", error);
             setErrors({ general: 'Web3 login failed. Please try again.' });
         }
       } else {
@@ -166,24 +167,25 @@ const Login = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#101014] px-4">
-      <div className={`w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl shadow-lg p-8 ${isAnimating ? 'animate-slide-out' : 'animate-slide-in'}`}>
-        <h2 className="text-3xl font-bold text-white mb-2 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <DarkModeToggle />
+      <div className={`w-full max-w-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-8 ${isAnimating ? 'animate-slide-out' : 'animate-slide-in'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 text-center">
           Sign in to your account
         </h2>
         
         {errors.general && (
-          <div className="bg-red-900/50 border border-red-800 text-red-400 px-4 py-3 rounded-md text-sm mb-4">
+          <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm mb-4">
             {errors.general}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-5 mb-10 mt-10">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 id="email"
                 name="email"
@@ -191,18 +193,18 @@ const Login = () => {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full bg-gray-800 border ${errors.email ? 'border-red-500' : 'border-gray-700'} text-gray-100 placeholder-gray-500 rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
+                className={`w-full bg-white dark:bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
                 placeholder="Enter your email"
               />
             </div>
-            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
+            {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 id="password"
                 name="password"
@@ -210,19 +212,19 @@ const Login = () => {
                 autoComplete="current-password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full bg-gray-800 border ${errors.password ? 'border-red-500' : 'border-gray-700'} text-gray-100 placeholder-gray-500 rounded-lg pl-10 pr-10 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
+                className={`w-full bg-white dark:bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg pl-10 pr-10 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
                 placeholder="Enter your password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
-            {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
+            {errors.password && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>}
           </div>
           <button
             type="submit"
@@ -235,35 +237,34 @@ const Login = () => {
               'Sign in'
             )}
           </button>
-          
         </form>
-        <p className="mb-6 text-center text-gray-400">
+        <p className="mb-6 text-center text-gray-600 dark:text-gray-400">
           Don't have an account?{' '}
           <button
             onClick={handleNavigateToRegister}
-            className="text-blue-400 hover:text-blue-300 underline font-medium transition"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline font-medium transition"
           >
             create a new account
           </button>
         </p>
         <div className="flex items-center my-6">
-          <div className="flex-grow border-t border-gray-700"></div>
-          <span className="mx-4 text-gray-400 bg-gray-900 px-2">
+          <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+          <span className="mx-4 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2">
             Or continue with
           </span>
-          <div className="flex-grow border-t border-gray-700"></div>
+          <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
         </div>
         <div className="flex gap-3">
-          <button className="flex-1 flex items-center justify-center bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-200 rounded-lg py-2 transition">
+          <button className="flex-1 flex items-center justify-center bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg py-2 transition">
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M21.805 10.023h-9.765v3.953h5.617c-.241 1.241-1.453 3.641-5.617 3.641-3.389 0-6.156-2.805-6.156-6.264s2.767-6.264 6.156-6.264c1.934 0 3.234.82 3.98 1.523l2.727-2.648c-1.727-1.6-3.953-2.586-6.707-2.586-5.547 0-10.055 4.508-10.055 10.055s4.508 10.055 10.055 10.055c5.82 0 9.672-4.086 9.672-9.82 0-.66-.07-1.16-.156-1.59z"/></svg>
           </button>
-          <button className="flex-1 flex items-center justify-center bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-200 rounded-lg py-2 transition">
+          <button className="flex-1 flex items-center justify-center bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg py-2 transition">
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-5.514 0-10 4.486-10 10 0 4.991 3.657 9.128 8.438 9.877.617.113.844-.267.844-.594 0-.293-.011-1.07-.017-2.099-3.338.726-4.042-1.609-4.042-1.609-.562-1.428-1.375-1.809-1.375-1.809-1.125-.77.086-.755.086-.755 1.242.087 1.896 1.277 1.896 1.277 1.104 1.893 2.898 1.347 3.604 1.031.112-.799.432-1.347.785-1.658-2.665-.304-5.466-1.332-5.466-5.931 0-1.309.469-2.381 1.236-3.221-.124-.304-.535-1.527.117-3.182 0 0 1.008-.322 3.301 1.23.957-.266 1.984-.399 3.003-.404 1.018.005 2.045.138 3.003.404 2.291-1.553 3.297-1.23 3.297-1.23.654 1.655.243 2.878.12 3.182.77.84 1.235 1.912 1.235 3.221 0 4.609-2.803 5.625-5.475 5.921.444.383.839 1.137.839 2.293 0 1.654-.015 2.988-.015 3.393 0 .33.225.713.85.592 4.779-.751 8.434-4.886 8.434-9.876 0-5.514-4.486-10-10-10z"/></svg>
           </button>
           <button 
             onClick={handleWeb3Login}
             disabled={isWeb3Loading}
-            className="flex-1 flex items-center justify-center bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-200 rounded-lg py-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 flex items-center justify-center bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg py-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <MetaMaskIcon />
           </button>

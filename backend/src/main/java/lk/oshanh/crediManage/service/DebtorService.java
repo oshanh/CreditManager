@@ -1,13 +1,13 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
-import lk.oshanh.crediManage.dto.DebtorDTO;
-import lk.oshanh.crediManage.dto.LoginResponseDTO;
-import lk.oshanh.crediManage.dto.RegisterRequest;
-import lk.oshanh.crediManage.entity.Debtor;
-import lk.oshanh.crediManage.entity.User;
-import lk.oshanh.crediManage.mapper.DebtorMapper;
-import lk.oshanh.crediManage.repository.DebtorRepository;
-import lk.oshanh.crediManage.repository.UserRepository;
+import lk.oshanh.credimanage.dto.DebtorDTO;
+import lk.oshanh.credimanage.dto.LoginResponseDTO;
+import lk.oshanh.credimanage.dto.RegisterRequest;
+import lk.oshanh.credimanage.entity.Debtor;
+import lk.oshanh.credimanage.entity.User;
+import lk.oshanh.credimanage.mapper.DebtorMapper;
+import lk.oshanh.credimanage.repository.DebtorRepository;
+import lk.oshanh.credimanage.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,7 @@ public class DebtorService {
 
         if (file != null && !file.isEmpty()) {
             try {
-                String uploadDir = "uploads/debtors";
+                String uploadDir = "/uploads/debtors";
                 Files.createDirectories(Paths.get(uploadDir));
 
                 String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();

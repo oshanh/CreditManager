@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.controller;
+package lk.oshanh.credimanage.controller;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

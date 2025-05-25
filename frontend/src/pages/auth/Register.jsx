@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
+import DarkModeToggle from '../../components/common/DarkModeToggle';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -97,31 +98,32 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#101014] px-4">
-      <div className={`w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl shadow-lg p-8 ${isAnimating ? 'animate-slide-out' : 'animate-slide-in'}`}>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <DarkModeToggle />
+      <div className={`w-full max-w-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-8 ${isAnimating ? 'animate-slide-out' : 'animate-slide-in'}`}>
         <button
           onClick={handleBackToSignIn}
-          className="flex items-center text-gray-400 hover:text-gray-300 mb-4 transition-colors"
+          className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-4 transition-colors"
         >
           <ArrowLeft className="h-5 w-5 mr-1" />
           Back to Sign In
         </button>
-        <h2 className="text-3xl font-bold text-white mb-2 text-center">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 text-center">
           Create an account
         </h2>
         
         {errors.general && (
-          <div className="bg-red-900/50 border border-red-800 text-red-400 px-4 py-3 rounded-md text-sm mb-4">
+          <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm mb-4">
             {errors.general}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Full Name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 id="name"
                 name="name"
@@ -129,18 +131,18 @@ const Register = () => {
                 autoComplete="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`w-full bg-gray-800 border ${errors.name ? 'border-red-500' : 'border-gray-700'} text-gray-100 placeholder-gray-500 rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
+                className={`w-full bg-white dark:bg-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
                 placeholder="Enter your name"
               />
             </div>
-            {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
+            {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 id="email"
                 name="email"
@@ -148,18 +150,18 @@ const Register = () => {
                 autoComplete="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full bg-gray-800 border ${errors.email ? 'border-red-500' : 'border-gray-700'} text-gray-100 placeholder-gray-500 rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
+                className={`w-full bg-white dark:bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
                 placeholder="Enter your email"
               />
             </div>
-            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
+            {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 id="password"
                 name="password"
@@ -167,26 +169,26 @@ const Register = () => {
                 autoComplete="new-password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full bg-gray-800 border ${errors.password ? 'border-red-500' : 'border-gray-700'} text-gray-100 placeholder-gray-500 rounded-lg pl-10 pr-10 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
+                className={`w-full bg-white dark:bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg pl-10 pr-10 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
                 placeholder="Enter your password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
-            {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
+            {errors.password && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>}
           </div>
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200 mb-1">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Confirm Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
               <input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -194,19 +196,19 @@ const Register = () => {
                 autoComplete="new-password"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className={`w-full bg-gray-800 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-700'} text-gray-100 placeholder-gray-500 rounded-lg pl-10 pr-10 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
+                className={`w-full bg-white dark:bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg pl-10 pr-10 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition`}
                 placeholder="Confirm your password"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
                 tabIndex={-1}
               >
                 {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
-            {errors.confirmPassword && <p className="mt-1 text-sm text-red-400">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.confirmPassword}</p>}
           </div>
           <button
             type="submit"

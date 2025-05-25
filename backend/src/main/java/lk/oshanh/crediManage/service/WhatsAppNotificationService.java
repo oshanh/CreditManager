@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;

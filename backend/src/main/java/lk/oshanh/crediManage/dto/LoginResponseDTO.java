@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.dto;
+package lk.oshanh.credimanage.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

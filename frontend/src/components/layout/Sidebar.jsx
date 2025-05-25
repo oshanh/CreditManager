@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation ,useNavigate} from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Users, 
@@ -21,13 +21,20 @@ import { useTheme } from '../../context/ThemeContext';
 import authService from '../../services/authService';
 import useClickOutside from '../../hooks/useClickOutside';
 
-
 const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { user, logout } = useUser();
   const { isDarkMode, toggleTheme } = useTheme();
+
+  // Effect to collapse sidebar on path change
+  useEffect(() => {
+    // Only collapse on mobile view
+    if (window.innerWidth < 1024) {
+      onClose(false);
+    }
+  }, [location.pathname, onClose]);
 
   // Refs for handling outside clicks
   const userMenuButtonRef = useRef(null); // Add ref for the user menu button

@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
-import lk.oshanh.crediManage.entity.User;
-import lk.oshanh.crediManage.repository.UserRepository;
+import lk.oshanh.credimanage.entity.User;
+import lk.oshanh.credimanage.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

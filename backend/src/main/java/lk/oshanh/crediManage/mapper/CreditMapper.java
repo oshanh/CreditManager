@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.mapper;
+package lk.oshanh.credimanage.mapper;
 
-import lk.oshanh.crediManage.entity.Credit;
-import lk.oshanh.crediManage.dto.CreditDTO;
+import lk.oshanh.credimanage.entity.Credit;
+import lk.oshanh.credimanage.dto.CreditDTO;
 
 public class CreditMapper {
 

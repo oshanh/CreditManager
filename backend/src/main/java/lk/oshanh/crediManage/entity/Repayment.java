@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.entity;
+package lk.oshanh.credimanage.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

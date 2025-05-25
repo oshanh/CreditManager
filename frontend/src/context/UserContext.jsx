@@ -7,10 +7,9 @@ export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    // Try loading from sessionStorage on initial load
-    const id = sessionStorage.getItem("userId");
-    const nickname = sessionStorage.getItem("nickname");
-    return id ? { id, nickname } : null;
+    //get from local storage
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
   });
 
   const login = (userData) => {

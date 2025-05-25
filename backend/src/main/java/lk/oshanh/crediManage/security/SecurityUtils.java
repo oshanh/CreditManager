@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.security;
+package lk.oshanh.credimanage.security;
 
-import lk.oshanh.crediManage.entity.User;
-import lk.oshanh.crediManage.repository.UserRepository;
+import lk.oshanh.credimanage.entity.User;
+import lk.oshanh.credimanage.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

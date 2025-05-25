@@ -1,7 +1,0 @@
-*.*~
-.env
-application.properties~
-*.java~
-backend/src/main/resources/application.properties~
-backend/src/main/java/lk/oshanh/credit/controller/TestController.java~
-.vscode/

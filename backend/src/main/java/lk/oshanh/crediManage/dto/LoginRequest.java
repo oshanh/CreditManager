@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.dto;
+package lk.oshanh.credimanage.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

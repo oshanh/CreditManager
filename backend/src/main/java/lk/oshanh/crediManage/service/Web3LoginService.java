@@ -1,10 +1,10 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
-import lk.oshanh.crediManage.dto.LoginResponseDTO;
-import lk.oshanh.crediManage.dto.Web3LoginRequest;
-import lk.oshanh.crediManage.entity.User;
-import lk.oshanh.crediManage.repository.UserRepository;
-import lk.oshanh.crediManage.utils.Web3Verifier;
+import lk.oshanh.credimanage.dto.LoginResponseDTO;
+import lk.oshanh.credimanage.dto.Web3LoginRequest;
+import lk.oshanh.credimanage.entity.User;
+import lk.oshanh.credimanage.repository.UserRepository;
+import lk.oshanh.credimanage.utils.Web3Verifier;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

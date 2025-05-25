@@ -1,8 +1,8 @@
-package lk.oshanh.crediManage.controller;
+package lk.oshanh.credimanage.controller;
 
-import lk.oshanh.crediManage.dto.DebtorDTO;
-import lk.oshanh.crediManage.security.SecurityUtils;
-import lk.oshanh.crediManage.service.DebtorService;
+import lk.oshanh.credimanage.dto.DebtorDTO;
+import lk.oshanh.credimanage.security.SecurityUtils;
+import lk.oshanh.credimanage.service.DebtorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

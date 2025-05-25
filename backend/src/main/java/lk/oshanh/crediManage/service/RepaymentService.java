@@ -1,10 +1,10 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
-import lk.oshanh.crediManage.dto.RepaymentDTO;
-import lk.oshanh.crediManage.entity.Repayment;
-import lk.oshanh.crediManage.mapper.RepaymentMapper;
-import lk.oshanh.crediManage.repository.RepaymentRepository;
-import lk.oshanh.crediManage.repository.CreditRepository;
+import lk.oshanh.credimanage.dto.RepaymentDTO;
+import lk.oshanh.credimanage.entity.Repayment;
+import lk.oshanh.credimanage.mapper.RepaymentMapper;
+import lk.oshanh.credimanage.repository.RepaymentRepository;
+import lk.oshanh.credimanage.repository.CreditRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

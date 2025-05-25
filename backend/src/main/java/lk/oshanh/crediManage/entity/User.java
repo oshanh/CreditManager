@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.entity;
+package lk.oshanh.credimanage.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

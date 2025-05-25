@@ -42,7 +42,7 @@ const AddDebtorForm = ({ onSuccess }) => {
     const file = e.target.files[0];
     if (file) {
       // Check file size (10MB limit)
-      const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+      const maxSize = 5 * 1024 * 1024; // 1MB in bytes
       if (file.size > maxSize) {
         setError('File size should not exceed 1MB');
         return;
@@ -105,7 +105,7 @@ const AddDebtorForm = ({ onSuccess }) => {
       if (onSuccess) {
         onSuccess(data);
       }
-      navigate('/debtors');
+      
     } catch (err) {
       setError(err.message || 'Failed to add debtor');
     } finally {

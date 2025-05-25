@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.config;
+package lk.oshanh.credimanage.config;
 
-import lk.oshanh.crediManage.security.JwtAuthenticationFilter;
-import lk.oshanh.crediManage.service.CustomUserDetailsService;
+import lk.oshanh.credimanage.security.JwtAuthenticationFilter;
+import lk.oshanh.credimanage.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 
 @Configuration
@@ -37,6 +37,8 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/api/v1/test/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/public/**").permitAll()
                 .requestMatchers("/api/v1/files/**").permitAll()  // Allow access to files endpoint
@@ -68,13 +70,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Your frontend URL
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
+                "https://www.oshanh.live",
+                "https://oshanh.live"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+
 }

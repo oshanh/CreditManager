@@ -3,6 +3,7 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
+    #platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: creditmanager
@@ -12,7 +13,11 @@ services:
       - mysql_data:/var/lib/mysql
 
   backend:
-    build: ./backend
+    image: 'oshanh/credit-backend:64'
+    #platform: linux/amd64
+    # build: 
+    #   context: ./backend
+    #   dockerfile: Dockerfile
     ports:
       - "8081:8081"
     depends_on:
@@ -21,13 +26,20 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/creditmanager?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+    volumes:
+      - uploads_data:/uploads
 
   frontend:
-    build: ./frontend
+    image: 'oshanh/credit-frontend:64'
+    #platform: linux/arm64
+    # build: 
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       - backend
 
 volumes:
   mysql_data:
+  uploads_data:

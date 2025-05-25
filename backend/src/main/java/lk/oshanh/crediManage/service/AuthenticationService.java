@@ -1,13 +1,13 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
-import lk.oshanh.crediManage.dto.AuthResponse;
-import lk.oshanh.crediManage.dto.LoginRequest;
-import lk.oshanh.crediManage.dto.RegisterRequest;
-import lk.oshanh.crediManage.dto.Web3LoginRequest;
-import lk.oshanh.crediManage.entity.User;
-import lk.oshanh.crediManage.repository.UserRepository;
-import lk.oshanh.crediManage.security.JwtTokenProvider;
-import lk.oshanh.crediManage.utils.Web3Verifier;
+import lk.oshanh.credimanage.dto.AuthResponse;
+import lk.oshanh.credimanage.dto.LoginRequest;
+import lk.oshanh.credimanage.dto.RegisterRequest;
+import lk.oshanh.credimanage.dto.Web3LoginRequest;
+import lk.oshanh.credimanage.entity.User;
+import lk.oshanh.credimanage.repository.UserRepository;
+import lk.oshanh.credimanage.security.JwtTokenProvider;
+import lk.oshanh.credimanage.utils.Web3Verifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

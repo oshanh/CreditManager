@@ -1,4 +1,4 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
 import org.springframework.stereotype.Service;
 

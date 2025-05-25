@@ -1,13 +1,13 @@
-package lk.oshanh.crediManage.service;
+package lk.oshanh.credimanage.service;
 
 import jakarta.transaction.Transactional;
-import lk.oshanh.crediManage.dto.CreditDTO;
-import lk.oshanh.crediManage.entity.Credit;
-import lk.oshanh.crediManage.entity.Debtor;
-import lk.oshanh.crediManage.mapper.CreditMapper;
-import lk.oshanh.crediManage.mapper.DebtorMapper;
-import lk.oshanh.crediManage.repository.CreditRepository;
-import lk.oshanh.crediManage.repository.DebtorRepository;
+import lk.oshanh.credimanage.dto.CreditDTO;
+import lk.oshanh.credimanage.entity.Credit;
+import lk.oshanh.credimanage.entity.Debtor;
+import lk.oshanh.credimanage.mapper.CreditMapper;
+import lk.oshanh.credimanage.mapper.DebtorMapper;
+import lk.oshanh.credimanage.repository.CreditRepository;
+import lk.oshanh.credimanage.repository.DebtorRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 

@@ -5,6 +5,8 @@ import Button from '../../components/common/Button';
 import { formatCurrency, formatPhoneNumber } from '../../utils/format';
 import debtorService from '../../services/debtorService';
 import useDebounce from '../../hooks/useDebounce';
+import DebtorFormModal from '../../components/debtors/DebtorFormModal';
+import MessageAlert from '../../components/common/MessageAlert';
 
 const API_BASE_URL = 'http://localhost:8081';
 
@@ -14,6 +16,9 @@ const DebtorsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDebtor, setSelectedDebtor] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   useEffect(() => {
@@ -44,10 +49,35 @@ const DebtorsPage = () => {
     }
   };
 
+  const handleEditClick = (debtor) => {
+    setSelectedDebtor(debtor);
+    setIsModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setSelectedDebtor(null);
+    setIsModalOpen(true);
+  };
+
+  const handleModalSuccess = async (isEdit = false) => {
+    try {
+      const response = await debtorService.getAllDebtors();
+      setDebtors(response);
+      setAlert({
+        show: true,
+        message: isEdit ? 'Debtor updated successfully' : 'Debtor added successfully',
+        type: 'success'
+      });
+    } catch (err) {
+      setError('Failed to refresh debtors list');
+    }
+  };
+
   const filteredDebtors = debtors.filter(debtor => 
     debtor.debtorName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
     debtor.address.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-    debtor.contactNumber.includes(debouncedSearchTerm)
+    debtor.contactNumber.includes(debouncedSearchTerm) ||
+    debtor.email?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   );
 
   const renderProfileImage = (debtor) => {
@@ -81,12 +111,21 @@ const DebtorsPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 flex flex-col min-h-[calc(100vh-4rem)]">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Debtors</h2>
+    <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 flex flex-col min-h-[calc(100vh-4rem)]">
+      {alert.show && (
+        <MessageAlert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Debtors</h2>
         <Button
           variant="primary"
-          onClick={() => navigate('/debtors/add')}
+          onClick={handleAddClick}
+          className="w-full sm:w-auto"
         >
           <Plus className="w-5 h-5 mr-2" />
           Add New Debtor
@@ -121,48 +160,105 @@ const DebtorsPage = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700/50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Contact</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Credit</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredDebtors.map((debtor) => (
-                  <tr key={debtor.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+            {/* Desktop View */}
+            <div className="hidden md:block">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700/50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photo</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Contact</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Credit</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {filteredDebtors.map((debtor) => (
+                    <tr key={debtor.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {renderProfileImage(debtor)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{debtor.debtorName}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{formatPhoneNumber(debtor.contactNumber)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{debtor.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{debtor.address}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-white">{formatCurrency(debtor.totalBalance)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleEditClick(debtor)}
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
+                        >
+                          <Edit className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(debtor.id)}
+                          className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden">
+              {filteredDebtors.map((debtor) => (
+                <div key={debtor.id} className="p-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3">
                       {renderProfileImage(debtor)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{debtor.debtorName}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{formatPhoneNumber(debtor.contactNumber)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{debtor.address}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-white">{formatCurrency(debtor.totalBalance)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">{debtor.debtorName}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{formatPhoneNumber(debtor.contactNumber)}</p>
+                      </div>
+                    </div>
+                    <div className="flex space-x-2">
                       <button
-                        onClick={() => navigate(`/debtors/${debtor.id}/edit`)}
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-4"
+                        onClick={() => handleEditClick(debtor)}
+                        className="p-2 text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
                       >
                         <Edit className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => handleDelete(debtor.id)}
-                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                        className="p-2 text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-medium">Email:</span> {debtor.email}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-medium">Address:</span> {debtor.address}
+                    </p>
+                    <p className="text-sm text-gray-900 dark:text-white">
+                      <span className="font-medium">Total Credit:</span> {formatCurrency(debtor.totalBalance)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
+
+      <DebtorFormModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedDebtor(null);
+        }}
+        debtor={selectedDebtor}
+        onSuccess={() => handleModalSuccess(!!selectedDebtor)}
+      />
     </div>
   );
 };

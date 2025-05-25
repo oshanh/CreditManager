@@ -1,7 +1,7 @@
-package lk.oshanh.crediManage.mapper;
+package lk.oshanh.credimanage.mapper;
 
-import lk.oshanh.crediManage.entity.Repayment;
-import lk.oshanh.crediManage.dto.RepaymentDTO;
+import lk.oshanh.credimanage.entity.Repayment;
+import lk.oshanh.credimanage.dto.RepaymentDTO;
 
 public class RepaymentMapper {
 
