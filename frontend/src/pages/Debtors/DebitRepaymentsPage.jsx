@@ -193,7 +193,7 @@ const DebitRepaymentsPage = () => {
   const remainingAmount = debit.debitAmount - (debit.totalRepayments || 0);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4 sm:py-8">
       {alert.show && (
         <MessageAlert
           type={alert.type}
@@ -202,7 +202,7 @@ const DebitRepaymentsPage = () => {
         />
       )}
 
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <Button
           variant="secondary"
           onClick={() => navigate(-1)}
@@ -212,50 +212,51 @@ const DebitRepaymentsPage = () => {
           Back
         </Button>
 
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Debit Details</h1>
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Debit Details</h1>
             <Button
               variant="primary"
               onClick={() => setIsAddRepaymentModalOpen(true)}
               disabled={remainingAmount <= 0}
+              className="w-full sm:w-auto"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add Repayment
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Description</p>
-              <p className="text-lg text-gray-900 dark:text-white">{debit.description}</p>
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white break-words">{debit.description}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Type</p>
-              <p className="text-lg text-gray-900 dark:text-white">{debit.type}</p>
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white">{debit.type}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Issue Date</p>
-              <p className="text-lg text-gray-900 dark:text-white">
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white">
                 {debit.issueDate ? formatDate(debit.issueDate) : 'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Due Date</p>
-              <p className="text-lg text-gray-900 dark:text-white">
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white">
                 {debit.dueDate ? formatDate(debit.dueDate) : 'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Total Amount</p>
-              <p className="text-lg text-gray-900 dark:text-white">{formatCurrency(debit.debitAmount)}</p>
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white">{formatCurrency(debit.debitAmount)}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Total Repayments</p>
-              <p className="text-lg text-gray-900 dark:text-white">{formatCurrency(debit.totalRepayments || 0)}</p>
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white">{formatCurrency(debit.totalRepayments || 0)}</p>
             </div>
-            <div>
+            <div className="sm:col-span-2">
               <p className="text-sm text-gray-500 dark:text-gray-400">Remaining Amount</p>
-              <p className={`text-lg font-semibold ${
+              <p className={`text-base sm:text-lg font-semibold ${
                 remainingAmount > 0 
                   ? 'text-red-600 dark:text-red-400' 
                   : 'text-green-600 dark:text-green-400'
@@ -267,70 +268,139 @@ const DebitRepaymentsPage = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Repayment Schedule</h2>
+          <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Repayment Schedule</h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700/50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {repayments.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                      No repayments scheduled yet
-                    </td>
-                  </tr>
-                ) : (
-                  repayments.map((repayment) => (
-                    <tr key={repayment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+
+          {/* Mobile View */}
+          <div className="block sm:hidden">
+            {repayments.length === 0 ? (
+              <div className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                No repayments scheduled yet
+              </div>
+            ) : (
+              repayments.map((repayment) => (
+                <div
+                  key={repayment.id}
+                  className="p-4 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Amount</p>
+                      <p className="text-base font-medium text-gray-900 dark:text-white">
                         {formatCurrency(repayment.repaymentAmount)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {repayment.repaymentDate ? formatDate(repayment.repaymentDate) : 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          repayment.paid
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400'
-                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-400'
-                        }`}>
-                          {repayment.paid ? 'Paid' : 'Pending'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {!repayment.paid ? (
-                          <Button
-                            variant="success"
-                            size="sm"
-                            onClick={() => showMarkAsPaidConfirmation(repayment)}
-                          >
-                            <Check className="w-4 h-4 mr-1" />
-                            Mark as Paid
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => showUndoPaymentConfirmation(repayment)}
-                          >
-                            <RotateCcw className="w-4 h-4 mr-1" />
-                            Undo
-                          </Button>
-                        )}
-                      </td>
+                      </p>
+                    </div>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      repayment.paid
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400'
+                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-400'
+                    }`}>
+                      {repayment.paid ? 'Paid' : 'Pending'}
+                    </span>
+                  </div>
+
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Date</p>
+                    <p className="text-sm text-gray-900 dark:text-white">
+                      {repayment.repaymentDate ? formatDate(repayment.repaymentDate) : 'N/A'}
+                    </p>
+                  </div>
+
+                  <div>
+                    {!repayment.paid ? (
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => showMarkAsPaidConfirmation(repayment)}
+                        className="w-full"
+                      >
+                        <Check className="w-4 h-4 mr-1" />
+                        Mark as Paid
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => showUndoPaymentConfirmation(repayment)}
+                        className="w-full"
+                      >
+                        <RotateCcw className="w-4 h-4 mr-1" />
+                        Undo
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden sm:block overflow-x-auto">
+            <div className="min-w-full inline-block align-middle">
+              <div className="overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-700/50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {repayments.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                          No repayments scheduled yet
+                        </td>
+                      </tr>
+                    ) : (
+                      repayments.map((repayment) => (
+                        <tr key={repayment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            {formatCurrency(repayment.repaymentAmount)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {repayment.repaymentDate ? formatDate(repayment.repaymentDate) : 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              repayment.paid
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400'
+                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-400'
+                            }`}>
+                              {repayment.paid ? 'Paid' : 'Pending'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            {!repayment.paid ? (
+                              <Button
+                                variant="success"
+                                size="sm"
+                                onClick={() => showMarkAsPaidConfirmation(repayment)}
+                              >
+                                <Check className="w-4 h-4 mr-1" />
+                                Mark as Paid
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => showUndoPaymentConfirmation(repayment)}
+                              >
+                                <RotateCcw className="w-4 h-4 mr-1" />
+                                Undo
+                              </Button>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
