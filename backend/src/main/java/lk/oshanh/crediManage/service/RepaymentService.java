@@ -29,6 +29,7 @@ public class RepaymentService {
     // Add repayment for a debit
     public RepaymentDTO addRepayment(Long debitId, RepaymentDTO repaymentDTO) {
         Repayment repayment = RepaymentMapper.toEntity(repaymentDTO);
+        repayment.setPaid(true);
         repayment.setDebit(debitRepository.findById(debitId).orElseThrow());
         repayment = repaymentRepository.save(repayment);
         return RepaymentMapper.toDTO(repayment);
