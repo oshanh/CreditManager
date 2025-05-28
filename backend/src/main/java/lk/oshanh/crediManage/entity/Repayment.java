@@ -17,6 +17,7 @@ public class Repayment {
 
     private Double repaymentAmount;
     private LocalDate repaymentDate;
+    private boolean isPaid;
 
     @ManyToOne
     @JoinColumn(name = "debit_id")

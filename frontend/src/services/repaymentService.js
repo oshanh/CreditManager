@@ -3,9 +3,9 @@ import apiClient from './apiClient';
 const BASE_URL = '/repayments';
 
 const repaymentService = {
-  getRepaymentsForCredit: async (creditId) => {
+  getRepaymentsForDebit: async (debitId) => {
     try {
-      const response = await apiClient.get(`${BASE_URL}/${creditId}`);
+      const response = await apiClient.get(`${BASE_URL}/${debitId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching repayments:', error);
@@ -13,9 +13,9 @@ const repaymentService = {
     }
   },
 
-  createRepayment: async (creditId, repaymentData) => {
+  createRepayment: async (debitId, repaymentData) => {
     try {
-      const response = await apiClient.post(`${BASE_URL}/${creditId}`, repaymentData);
+      const response = await apiClient.post(`${BASE_URL}/${debitId}`, repaymentData);
       return response.data;
     } catch (error) {
       console.error('Error creating repayment:', error);
@@ -29,6 +29,26 @@ const repaymentService = {
       return response.data;
     } catch (error) {
       console.error('Error updating repayment:', error);
+      throw error;
+    }
+  },
+
+  markAsPaid: async (repaymentId) => {
+    try {
+      const response = await apiClient.put(`${BASE_URL}/${repaymentId}/mark-as-paid`);
+      return response.data;
+    } catch (error) {
+      console.error('Error marking repayment as paid:', error);
+      throw error;
+    }
+  },
+
+  undoPayment: async (repaymentId) => {
+    try {
+      const response = await apiClient.put(`${BASE_URL}/${repaymentId}/undo-payment`);
+      return response.data;
+    } catch (error) {
+      console.error('Error undoing payment:', error);
       throw error;
     }
   },

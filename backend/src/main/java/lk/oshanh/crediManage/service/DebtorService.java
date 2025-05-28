@@ -93,7 +93,7 @@ public class DebtorService {
                     existingDebtor.setContactNumber(debtorDTO.getContactNumber());
                     existingDebtor.setAddress(debtorDTO.getAddress());
                     existingDebtor.setEmail(debtorDTO.getEmail());
-                    existingDebtor.setTotalBalance(debtorDTO.getTotalBalance());
+                    //existingDebtor.setTotalBalance(debtorDTO.getTotalBalance());
 
                     // Handle profile photo update if a new file is provided
                     if (file != null && !file.isEmpty()) {

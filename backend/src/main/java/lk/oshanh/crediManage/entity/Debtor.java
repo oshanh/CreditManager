@@ -20,7 +20,8 @@ public class Debtor {
     private String contactNumber;
     private String address;
     private String profilePhotoPath;
-    private double totalBalance;
+
+    private double totalBalance=0.0;
     private String email;
 
     @OneToMany(mappedBy = "debtor", cascade = CascadeType.ALL)

@@ -12,7 +12,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
     email: '',
     phone: '',
     address: '',
-    initialDebt: '',
     profilePhoto: null,
   });
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -27,7 +26,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
         email: debtor.email || '',
         phone: debtor.contactNumber || '',
         address: debtor.address || '',
-        initialDebt: debtor.totalBalance?.toString() || '0',
         profilePhoto: null,
       });
       if (debtor.profilePhotoPath) {
@@ -40,7 +38,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
         email: '',
         phone: '',
         address: '',
-        initialDebt: '',
         profilePhoto: null,
       });
       setPhotoPreview(null);
@@ -95,9 +92,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
       errors.phone = 'Please enter a valid phone number (at least 10 digits)';
     }
     if (!formData.address.trim()) errors.address = 'Address is required';
-    if (!debtor && (formData.initialDebt === '' || parseFloat(formData.initialDebt) < 0 || isNaN(parseFloat(formData.initialDebt)))) {
-      errors.initialDebt = 'Initial Credit Amount is required and must be a non-negative number';
-    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -116,7 +110,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
       email: formData.email,
       address: formData.address,
       contactNumber: formData.phone,
-      totalBalance: parseFloat(formData.initialDebt) || 0,
     }
 
     try {
@@ -136,7 +129,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
         email: '',
         phone: '',
         address: '',
-        initialDebt: '',
         profilePhoto: null,
       });
       setPhotoPreview(null);
@@ -243,21 +235,6 @@ const DebtorFormModal = ({ isOpen, onClose, debtor, onSuccess }) => {
                   placeholder="(123) 456-7890"
                   error={formErrors.phone}
                 />
-
-                {!debtor && (
-                  <Input
-                    label="Initial Debt Amount"
-                    name="initialDebt"
-                    type="number"
-                    value={formData.initialDebt}
-                    onChange={handleChange}
-                    required
-                    min="0"
-                    step="0.01"
-                    placeholder="0.00"
-                    error={formErrors.initialDebt}
-                  />
-                )}
 
                 <div className="md:col-span-2">
                   <Input

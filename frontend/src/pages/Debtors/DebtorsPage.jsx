@@ -92,6 +92,10 @@ const DebtorsPage = () => {
     }
   };
 
+  const handleDebtorClick = (debtor) => {
+    navigate(`/debtors/${debtor.id}`);
+  };
+
   const filteredDebtors = debtors.filter(debtor => 
     debtor.debtorName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
     debtor.address.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
@@ -102,14 +106,20 @@ const DebtorsPage = () => {
   const renderProfileImage = (debtor) => {
     if (!debtor.profilePhotoPath) {
       return (
-        <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
+        <div 
+          className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500 cursor-pointer"
+          onClick={() => handleDebtorClick(debtor)}
+        >
           <span className="text-lg font-bold">{debtor.debtorName?.charAt(0) || '?'}</span>
         </div>
       );
     }
 
     return (
-      <div className="h-10 w-10 rounded-full overflow-hidden">
+      <div 
+        className="h-10 w-10 rounded-full overflow-hidden cursor-pointer"
+        onClick={() => handleDebtorClick(debtor)}
+      >
         <img
           src={debtorService.getSecureFileUrl(debtor.profilePhotoPath)}
           alt={debtor.debtorName}
@@ -118,7 +128,7 @@ const DebtorsPage = () => {
             const parent = e.target.parentElement;
             if (parent) {
               parent.innerHTML = `
-                <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500 cursor-pointer">
                   <span class="text-lg font-bold">${debtor.debtorName?.charAt(0) || '?'}</span>
                 </div>
               `;
@@ -189,7 +199,7 @@ const DebtorsPage = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Contact</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Credit</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Balance</th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
@@ -199,7 +209,12 @@ const DebtorsPage = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {renderProfileImage(debtor)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{debtor.debtorName}</td>
+                      <td 
+                        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                        onClick={() => handleDebtorClick(debtor)}
+                      >
+                        {debtor.debtorName}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{formatPhoneNumber(debtor.contactNumber)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{debtor.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{debtor.address}</td>
@@ -232,7 +247,12 @@ const DebtorsPage = () => {
                     <div className="flex items-center space-x-3">
                       {renderProfileImage(debtor)}
                       <div>
-                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">{debtor.debtorName}</h3>
+                        <h3 
+                          className="text-sm font-medium text-gray-900 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                          onClick={() => handleDebtorClick(debtor)}
+                        >
+                          {debtor.debtorName}
+                        </h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">{formatPhoneNumber(debtor.contactNumber)}</p>
                       </div>
                     </div>

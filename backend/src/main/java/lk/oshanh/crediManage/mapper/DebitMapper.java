@@ -10,8 +10,14 @@ public class DebitMapper {
         dto.setId(debit.getId());
         dto.setDebitAmount(debit.getDebitAmount());
         dto.setDescription(debit.getDescription());
+        dto.setIssueDate(debit.getIssueDate());
         dto.setDueDate(debit.getDueDate());
-        dto.setDebtorId(debit.getDebtor().getId());  // Mapping the customer ID
+        dto.setType(debit.getType());
+        dto.setDebtorId(debit.getDebtor().getId());
+        dto.setTotalRepayments(debit.getTotalRepayments());
+        
+
+        
         return dto;
     }
 
@@ -20,7 +26,9 @@ public class DebitMapper {
         debit.setId(dto.getId());
         debit.setDebitAmount(dto.getDebitAmount());
         debit.setDescription(dto.getDescription());
+        debit.setIssueDate(dto.getIssueDate());
         debit.setDueDate(dto.getDueDate());
+        debit.setType(dto.getType());
         return debit;
     }
 }

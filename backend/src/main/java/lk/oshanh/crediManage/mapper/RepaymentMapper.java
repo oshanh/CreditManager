@@ -10,6 +10,7 @@ public class RepaymentMapper {
         dto.setId(repayment.getId());
         dto.setRepaymentAmount(repayment.getRepaymentAmount());
         dto.setRepaymentDate(repayment.getRepaymentDate());
+        dto.setPaid(repayment.isPaid());
         dto.setDebitId(repayment.getDebit().getId());  // Mapping the debit ID
         return dto;
     }
@@ -19,6 +20,7 @@ public class RepaymentMapper {
         repayment.setId(dto.getId());
         repayment.setRepaymentAmount(dto.getRepaymentAmount());
         repayment.setRepaymentDate(dto.getRepaymentDate());
+        repayment.setPaid(dto.isPaid());
         return repayment;
     }
 }

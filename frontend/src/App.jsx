@@ -6,6 +6,8 @@ import Register from './pages/auth/Register'
 import Dashboard from './pages/Dashboard/Dashboard'
 import AddDebtorPage from './pages/Debtors/AddDebtorPage'
 import DebtorsPage from './pages/Debtors/DebtorsPage'
+import DebtorDetailsPage from './pages/Debtors/DebtorDetailsPage'
+import DebitRepaymentsPage from './pages/Debtors/DebitRepaymentsPage'
 import Welcome from './pages/Welcome'
 import Transactions from './pages/Transactions'
 import Reports from './pages/Reports'
@@ -22,6 +24,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/debtors" element={<DebtorsPage />} />
         <Route path="/debtors/add" element={<AddDebtorPage />} />
+        <Route path="/debtors/:id" element={<DebtorDetailsPage />} />
+        <Route path="/debtors/:id/debits/:debitId" element={<DebitRepaymentsPage />} />
         <Route path={ROUTES.TRANSACTIONS} element={<Transactions />} />
         <Route path={ROUTES.REPORTS} element={<Reports />} />
         <Route path={ROUTES.DOCUMENTS} element={<Documents />} />

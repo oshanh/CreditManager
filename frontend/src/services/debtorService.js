@@ -23,17 +23,17 @@ const debtorService = {
     }
   },
 
-  createDebtor:  (debtorData,file) => {
-   const formData = new FormData();
-   formData.append('debtor', new Blob([JSON.stringify(debtorData)], {
-    type: 'application/json'
-   }));
-   if (file) {
-    formData.append('file', file);
-   }
-   return apiClient.post(BASE_URL, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-   });
+  createDebtor: (debtorData, file) => {
+    const formData = new FormData();
+    formData.append('debtor', new Blob([JSON.stringify(debtorData)], {
+      type: 'application/json'
+    }));
+    if (file) {
+      formData.append('file', file);
+    }
+    return apiClient.post(BASE_URL, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
   },
 
   updateDebtor: async (debtorId, debtorData, file) => {
@@ -66,18 +66,15 @@ const debtorService = {
 
   getProfilePhotoUrl(filename) {
     if (!filename) return null;
-    // Extract the filename from the full path if it's in the old format
     const actualFilename = filename.split('/').pop();
     return `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/debtors/${actualFilename}`;
   },
 
-  // Helper method to get secure file URL with auth header
   getSecureFileUrl(filename) {
     if (!filename) return null;
     const actualFilename = filename.split('/').pop();
     const url = `${apiClient.defaults.baseURL.replace('/api/v1', '')}/api/v1/files/debtors/${actualFilename}`;
     
-    // Create a URL object that includes the auth token
     const secureUrl = new URL(url);
     const token = localStorage.getItem('token');
     if (token) {

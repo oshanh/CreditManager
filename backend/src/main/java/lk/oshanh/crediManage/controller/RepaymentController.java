@@ -7,35 +7,87 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/repayments")
-
 public class RepaymentController {
 
     @Autowired
     private RepaymentService repaymentService;
 
     @PostMapping("/{debitId}")
-    public ResponseEntity<RepaymentDTO> createRepayment(@PathVariable Long debitId, @RequestBody RepaymentDTO repaymentDTO) {
-        RepaymentDTO createdRepayment = repaymentService.addRepayment(debitId, repaymentDTO);
-        return new ResponseEntity<>(createdRepayment, HttpStatus.CREATED);
+    public ResponseEntity<RepaymentDTO> createRepayment(
+            @PathVariable Long debitId,
+            @Valid @RequestBody RepaymentDTO repaymentDTO) {
+        try {
+            RepaymentDTO createdRepayment = repaymentService.addRepayment(debitId, repaymentDTO);
+            return new ResponseEntity<>(createdRepayment, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{debitId}")
-    public List<RepaymentDTO> getRepaymentsForDebit(@PathVariable Long debitId) {
-        return repaymentService.getRepaymentsForDebit(debitId);
+    public ResponseEntity<List<RepaymentDTO>> getRepaymentsForDebit(@PathVariable Long debitId) {
+        try {
+            List<RepaymentDTO> repayments = repaymentService.getRepaymentsForDebit(debitId);
+            return ResponseEntity.ok(repayments);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RepaymentDTO> updateRepayment(@PathVariable Long id, @RequestBody RepaymentDTO repaymentDTO) {
-        return ResponseEntity.ok(repaymentService.updateRepayment(id, repaymentDTO));
+    public ResponseEntity<RepaymentDTO> updateRepayment(
+            @PathVariable Long id,
+            @Valid @RequestBody RepaymentDTO repaymentDTO) {
+        try {
+            RepaymentDTO updatedRepayment = repaymentService.updateRepayment(id, repaymentDTO);
+            return ResponseEntity.ok(updatedRepayment);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}/mark-as-paid")
+    public ResponseEntity<RepaymentDTO> markAsPaid(@PathVariable Long id) {
+        try {
+            RepaymentDTO updatedRepayment = repaymentService.markAsPaid(id);
+            return ResponseEntity.ok(updatedRepayment);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}/undo-payment")
+    public ResponseEntity<RepaymentDTO> undoPayment(@PathVariable Long id) {
+        try {
+            RepaymentDTO updatedRepayment = repaymentService.undoPayment(id);
+            return ResponseEntity.ok(updatedRepayment);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRepayment(@PathVariable Long id) {
-        repaymentService.deleteRepayment(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            repaymentService.deleteRepayment(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

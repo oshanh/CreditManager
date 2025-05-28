@@ -18,7 +18,7 @@ const AddDebtorForm = ({ onSuccess }) => {
     email: '',
     phone: '',
     address: '',
-    initialDebt: '',
+    initialDebt: 0,
     profilePhoto: null,
   });
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -188,7 +188,7 @@ const AddDebtorForm = ({ onSuccess }) => {
             error={formErrors.phone}
           />
 
-          <Input
+          {/* <Input
             label="Initial Debt Amount"
             name="initialDebt"
             type="number"
@@ -199,7 +199,7 @@ const AddDebtorForm = ({ onSuccess }) => {
             step="0.01"
             placeholder="0.00"
             error={formErrors.initialDebt}
-          />
+          /> */}
 
           <div className="md:col-span-2">
             <Input
