@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponse {
+    private boolean isAuthenticated;
     private String token;
     private String email;
     private String nickname;
     private String address;
-    private boolean isAuthenticated;
+    private String message;
 } 

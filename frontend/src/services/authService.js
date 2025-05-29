@@ -65,6 +65,24 @@ const authService = {
         }
     },
 
+    // Verify OTP
+    async verifyOTP(otpData) {
+        try {
+            const response = await apiClient.post('/auth/verify-otp', otpData);
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    email: response.data.email,
+                    nickname: response.data.nickname,
+                    address: response.data.address
+                }));
+            }
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
     // Logout
     async logout() {
         try {

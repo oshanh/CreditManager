@@ -1,10 +1,7 @@
 package lk.oshanh.credimanage.controller;
 
 import jakarta.validation.Valid;
-import lk.oshanh.credimanage.dto.AuthResponse;
-import lk.oshanh.credimanage.dto.LoginRequest;
-import lk.oshanh.credimanage.dto.RegisterRequest;
-import lk.oshanh.credimanage.dto.Web3LoginRequest;
+import lk.oshanh.credimanage.dto.*;
 import lk.oshanh.credimanage.service.AuthenticationService;
 import lk.oshanh.credimanage.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +18,11 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authenticationService.register(request));
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<AuthResponse> verifyOTP(@Valid @RequestBody OTPRequest request) {
+        return ResponseEntity.ok(authenticationService.verifyOTP(request));
     }
 
     @PostMapping("/login")

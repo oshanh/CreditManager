@@ -66,8 +66,10 @@ pipeline {
 
         stage('Deploy to Server') {
             steps {
-                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sshagent(['credit-server']) {
+                withCredentials([
+                    usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'),
+                    string(credentialsId: 'gmail-app-password', variable: 'EMAIL_APP_PWD')
+                ]) {
                         sh """
                         ssh -o StrictHostKeyChecking=no $SSH_TARGET << EOF
                         docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -99,6 +101,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/creditmanager?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_MAIL_PASSWORD: ${EMAIL_APP_PWD}
     volumes:
       - uploads_data:/uploads
   

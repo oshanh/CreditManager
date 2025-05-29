@@ -1,9 +1,7 @@
 package lk.oshanh.credimanage.service;
 
-import lk.oshanh.credimanage.dto.AuthResponse;
-import lk.oshanh.credimanage.dto.LoginRequest;
-import lk.oshanh.credimanage.dto.RegisterRequest;
-import lk.oshanh.credimanage.dto.Web3LoginRequest;
+import jakarta.mail.MessagingException;
+import lk.oshanh.credimanage.dto.*;
 import lk.oshanh.credimanage.entity.User;
 import lk.oshanh.credimanage.repository.UserRepository;
 import lk.oshanh.credimanage.security.JwtTokenProvider;
@@ -17,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -25,23 +25,79 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
+
+    // Store OTPs and registration data temporarily (in production, use Redis or similar)
+    private final Map<String, String> otpStore = new ConcurrentHashMap<>();
+    private final Map<String, RegistrationData> registrationDataStore = new ConcurrentHashMap<>();
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            //throw new RuntimeException("Email already exists");
             return AuthResponse.builder()
                     .isAuthenticated(false)
                     .email("Email already exists")
                     .build();
         }
 
+        try {
+            String otp = emailService.generateOTP();
+            otpStore.put(request.getEmail(), otp);
+            
+            // Store registration data
+            RegistrationData registrationData = new RegistrationData();
+            registrationData.setNickname(request.getNickname());
+            registrationData.setEmail(request.getEmail());
+            registrationData.setPassword(request.getPassword());
+            registrationData.setAddress(request.getAddress());
+            registrationDataStore.put(request.getEmail(), registrationData);
+            
+            emailService.sendOTPEmail(request.getEmail(), otp);
+            
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .email(request.getEmail())
+                    .message("OTP sent to your email")
+                    .build();
+        } catch (MessagingException e) {
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .email("Failed to send verification email")
+                    .build();
+        }
+    }
+
+    @Transactional
+    public AuthResponse verifyOTP(OTPRequest request) {
+        String storedOTP = otpStore.get(request.getEmail());
+        if (storedOTP == null || !storedOTP.equals(request.getOtp())) {
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .email("Invalid OTP")
+                    .build();
+        }
+
+        // Get stored registration data
+        RegistrationData registrationData = registrationDataStore.get(request.getEmail());
+        if (registrationData == null) {
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .email("Registration data not found")
+                    .build();
+        }
+
+        // Clear OTP and registration data after successful verification
+        otpStore.remove(request.getEmail());
+        registrationDataStore.remove(request.getEmail());
+
+        // Create user after OTP verification
         User user = new User();
-        user.setNickname(request.getNickname());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setAddress(request.getAddress());
+        user.setEmail(registrationData.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationData.getPassword()));
+        user.setNickname(registrationData.getNickname());
+        user.setAddress(registrationData.getAddress());
         user.setCreatedAt(LocalDateTime.now());
+        user.setEmailVerified(true);
 
         userRepository.save(user);
 

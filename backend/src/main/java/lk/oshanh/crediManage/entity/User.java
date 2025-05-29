@@ -14,9 +14,21 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
-    private String address; // Ethereum address as the unique ID
-    private String email;
-    private String password;
+
+    @Column(nullable = false)
     private String nickname;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    private String address;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private boolean emailVerified = false;
 }

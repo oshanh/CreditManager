@@ -24,4 +24,17 @@ apiClient.interceptors.request.use(
   }
 );
 
+// Response interceptor for handling errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle 401 Unauthorized
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default apiClient;
