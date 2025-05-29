@@ -63,14 +63,14 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="lg:hidden fixed top-4 right-4 z-50">
         <button
           onClick={() => onClose(!isOpen)}
-          className=" rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+          className="rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
         >
           {!isOpen ?
-              <ChevronRight className="h-8 w-8" />:
-              <ChevronLeft className="h-8 w-8" />
+              <ChevronLeft className="h-8 w-8" />:
+              <ChevronRight className="h-8 w-8" />
               }
         </button>
       </div>
@@ -85,8 +85,8 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:h-screen ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 right-0 z-40 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:left-0 lg:right-auto lg:h-screen ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
         } ${isCollapsed ? 'lg:w-20' : 'lg:w-64'}`}
       >
         <div className="h-full flex flex-col">

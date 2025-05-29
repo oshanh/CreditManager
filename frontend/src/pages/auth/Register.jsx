@@ -80,7 +80,7 @@ const Register = () => {
       if (response.authenticated) {
         navigate('/login');
       } else {
-        setErrors({ general: response.message || 'Registration failed. Please try again.' });
+        setErrors({ general: response.email || 'Registration failed. Please try again.' });
       }
     } catch (error) {
       console.error('Registration error:', error);

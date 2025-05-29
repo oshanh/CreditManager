@@ -24,6 +24,13 @@ export const UserProvider = ({ children }) => {
     sessionStorage.removeItem("nickname");
   };
 
+    // In UserContext.jsx
+  const updateUser = (userData) => {
+    setUser(userData);
+    sessionStorage.setItem("userId", userData.id);
+    sessionStorage.setItem("nickname", userData.nickname);
+  };
+
   const value = useMemo(() => ({ user, login, logout }), [user]);
 
   return (

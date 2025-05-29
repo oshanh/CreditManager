@@ -29,7 +29,11 @@ public class AuthenticationService {
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            //throw new RuntimeException("Email already exists");
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .email("Email already exists")
+                    .build();
         }
 
         User user = new User();

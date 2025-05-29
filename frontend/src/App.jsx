@@ -13,6 +13,7 @@ import Transactions from './pages/Transactions'
 import Reports from './pages/Reports'
 import Documents from './pages/Documents'
 import Notifications from './pages/Notifications'
+import ProfileSettings from './pages/Settings/ProfileSettings'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path={ROUTES.REPORTS} element={<Reports />} />
         <Route path={ROUTES.DOCUMENTS} element={<Documents />} />
         <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
+        <Route path={ROUTES.PROFILE} element={<ProfileSettings />} />
       </Route>
     </Routes>
   )

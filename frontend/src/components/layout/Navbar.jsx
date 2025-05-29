@@ -3,7 +3,7 @@ import { Menu, X, Bell, Search, Sun, Moon } from 'lucide-react';
 import { useUser } from '../../context/UserContext';
 import { useTheme } from '../../context/ThemeContext';
 import useClickOutside from '../../hooks/useClickOutside';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import authService from '../../services/authService';
 import { ROUTES } from '../../constants/routes';
 import PropTypes from 'prop-types';
@@ -82,18 +82,12 @@ const Navbar = ({ onToggleSidebar }) => {
                     <p className="font-medium">{user?.nickname || 'User'}</p>
                     <p className="text-gray-500 dark:text-gray-400 truncate">{user?.email || 'user@example.com'}</p>
                   </div>
-                  <a
-                    href="#"
+                  <Link
+                    to={ROUTES.PROFILE}
                     className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    Your Profile
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Settings
-                  </a>
+                    Profile Settings
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
