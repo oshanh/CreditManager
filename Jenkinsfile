@@ -47,16 +47,11 @@ pipeline {
                     sh '''
                     docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-
-
                     docker build -t $BACKEND_IMAGE ./backend 
                     docker build -t $FRONTEND_IMAGE ./frontend 
 
                     docker push $BACKEND_IMAGE
                     docker push $FRONTEND_IMAGE
-
-
-                   
 
                     docker logout
                     '''
@@ -70,14 +65,13 @@ pipeline {
                     usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'),
                     string(credentialsId: 'gmail-app-password', variable: 'EMAIL_APP_PWD')
                 ]) {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no $SSH_TARGET << EOF
-                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+                    sh """
+                    ssh -o StrictHostKeyChecking=no $SSH_TARGET << EOF
+                    docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-                        mkdir -p creditmanager && cd creditmanager
-                        
+                    mkdir -p creditmanager && cd creditmanager
 
-                        cat > docker-compose.yml << COMPOSE
+                    cat > docker-compose.yml << COMPOSE
 version: '3.8'
 
 services:
@@ -104,7 +98,6 @@ services:
       SPRING_MAIL_PASSWORD: ${EMAIL_APP_PWD}
     volumes:
       - uploads_data:/uploads
-  
 
   frontend:
     image: $FRONTEND_IMAGE
@@ -118,13 +111,12 @@ volumes:
   uploads_data:
 COMPOSE
 
-                        docker compose down || true
-                        docker compose pull
-                        docker compose up -d
-                        docker logout
+                    docker compose down || true
+                    docker compose pull
+                    docker compose up -d
+                    docker logout
 EOF
-                        """
-                    }
+                    """
                 }
             }
         }
