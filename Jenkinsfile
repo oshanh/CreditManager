@@ -65,6 +65,7 @@ pipeline {
                     usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS'),
                     string(credentialsId: 'gmail-app-password', variable: 'EMAIL_APP_PWD')
                 ]) {
+                    sshagent(['credit-server']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no $SSH_TARGET << EOF
                     docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -117,6 +118,7 @@ COMPOSE
                     docker logout
 EOF
                     """
+                    }
                 }
             }
         }
