@@ -95,7 +95,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/creditmanager?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      SPRING_MAIL_PASSWORD: ${EMAIL_APP_PWD}
+      SPRING_MAIL_PASSWORD: $EMAIL_APP_PWD
     volumes:
       - uploads_data:/uploads
 
