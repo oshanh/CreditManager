@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import DarkModeToggle from '../../components/common/DarkModeToggle';
@@ -9,6 +9,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [isAnimating, setIsAnimating] = useState(false);
   const [showOTPInput, setShowOTPInput] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -98,7 +99,10 @@ const Register = () => {
         });
         
         if (response.authenticated) {
-          navigate('/login');
+          setVerificationSuccess(true);
+          setTimeout(() => {
+            navigate('/login');
+          }, 2000);
         } else {
           setErrors({ general: response.email || 'Verification failed. Please try again.' });
         }
@@ -133,7 +137,12 @@ const Register = () => {
           {showOTPInput ? 'Verify Your Email' : 'Create an account'}
         </h2>
         
-        {errors.general && (
+        {verificationSuccess ? (
+          <div className="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-4 py-3 rounded-md text-sm mb-4 flex items-center">
+            <CheckCircle className="h-5 w-5 mr-2" />
+            Email verified successfully! Redirecting to login...
+          </div>
+        ) : errors.general && (
           <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm mb-4">
             {errors.general}
           </div>
