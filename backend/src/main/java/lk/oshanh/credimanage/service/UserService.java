@@ -1,5 +1,6 @@
 package lk.oshanh.credimanage.service;
 
+import lk.oshanh.credimanage.dto.ResponseDTO;
 import lk.oshanh.credimanage.dto.UserUpdateDTO;
 import lk.oshanh.credimanage.entity.User;
 import lk.oshanh.credimanage.exception.ResourceNotFoundException;
@@ -31,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(Long userId, UserUpdateDTO updateDTO) {
+    public UserUpdateDTO updateUser(Long userId, UserUpdateDTO updateDTO) {
         User user = getUserById(userId);
 
         // Update basic info if provided
@@ -68,6 +69,14 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(updateDTO.getNewPassword()));
         }
 
-        return userRepository.save(user);
+        User updated=userRepository.save(user);
+
+        UserUpdateDTO updatedUser=new UserUpdateDTO();
+
+        updatedUser.setAddress(updated.getAddress());
+        updatedUser.setEmail(updated.getEmail());
+        updatedUser.setNickname(updated.getNickname());
+
+        return updatedUser;
     }
 } 

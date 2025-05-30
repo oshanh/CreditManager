@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt) && !tokenBlacklistService.isBlacklisted(jwt)) {
                 String username = tokenProvider.getUsernameFromToken(jwt);
-                System.out.println("\n JWT userName:"+username+"\n");
+                //System.out.println("\n JWT userName:"+username+"\n");
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

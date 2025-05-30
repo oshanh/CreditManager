@@ -109,6 +109,29 @@ const authService = {
     // Check if user is logged in
     isLoggedIn() {
         return !!localStorage.getItem('token');
+    },
+
+    // Request password reset
+    async requestPasswordReset(email) {
+        try {
+            const response = await apiClient.post('/auth/request-password-reset', { email });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    // Confirm password reset
+    async confirmPasswordReset(token, newPassword) {
+        try {
+            const response = await apiClient.post('/auth/confirm-password-reset', {
+                token,
+                newPassword
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
     }
 };
 

@@ -3,35 +3,37 @@ import PropTypes from 'prop-types';
 
 const UserContext = createContext();
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
+};
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     //get from local storage
-    const user = localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
   const login = (userData) => {
     setUser(userData);
-    sessionStorage.setItem("userId", userData.id);
-    sessionStorage.setItem("nickname", userData.nickname);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    sessionStorage.removeItem("userId");
-    sessionStorage.removeItem("nickname");
+    localStorage.removeItem("user");
   };
 
-    // In UserContext.jsx
   const updateUser = (userData) => {
     setUser(userData);
-    sessionStorage.setItem("userId", userData.id);
-    sessionStorage.setItem("nickname", userData.nickname);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  const value = useMemo(() => ({ user, login, logout }), [user]);
+  const value = useMemo(() => ({ user, login, logout, updateUser }), [user]);
 
   return (
     <UserContext.Provider value={value}>

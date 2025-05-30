@@ -7,6 +7,7 @@ import lk.oshanh.credimanage.repository.UserRepository;
 import lk.oshanh.credimanage.security.JwtTokenProvider;
 import lk.oshanh.credimanage.utils.Web3Verifier;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -30,6 +33,7 @@ public class AuthenticationService {
     // Store OTPs and registration data temporarily (in production, use Redis or similar)
     private final Map<String, String> otpStore = new ConcurrentHashMap<>();
     private final Map<String, RegistrationData> registrationDataStore = new ConcurrentHashMap<>();
+    private final Map<String, String> passwordResetTokens = new ConcurrentHashMap<>();
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
@@ -112,10 +116,12 @@ public class AuthenticationService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        log.info("\n======\nlogin function started\n=========\n");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
+        log.info(String.valueOf(authentication.isAuthenticated()));
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -152,6 +158,66 @@ public class AuthenticationService {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .address(user.getAddress())
+                .build();
+    }
+
+    @Transactional
+    public AuthResponse requestPasswordReset(PasswordResetRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElse(null);
+
+        if (user == null) {
+            // Don't reveal that the email doesn't exist
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .message("If an account exists with this email, you will receive a password reset link.")
+                    .build();
+        }
+
+        try {
+            String resetToken = UUID.randomUUID().toString();
+            passwordResetTokens.put(resetToken, user.getEmail());
+            emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
+
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .message("If an account exists with this email, you will receive a password reset link.")
+                    .build();
+        } catch (MessagingException e) {
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .message("Failed to send password reset email. Please try again.")
+                    .build();
+        }
+    }
+
+    @Transactional
+    public AuthResponse confirmPasswordReset(PasswordResetConfirmRequest request) {
+        String email = passwordResetTokens.get(request.getToken());
+        if (email == null) {
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .message("Invalid or expired reset token.")
+                    .build();
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElse(null);
+
+        if (user == null) {
+            return AuthResponse.builder()
+                    .isAuthenticated(false)
+                    .message("User not found.")
+                    .build();
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        passwordResetTokens.remove(request.getToken());
+
+        return AuthResponse.builder()
+                .isAuthenticated(true)
+                .message("Password has been reset successfully.")
                 .build();
     }
 } 

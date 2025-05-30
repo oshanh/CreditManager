@@ -47,7 +47,14 @@ const ProfileSettings = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      // Validate passwords if changing password
+      // Create update data object with only the fields that are being changed
+      const updateData = {
+        nickname: formData.nickname,
+        email: formData.email,
+        address: formData.address
+      };
+
+      // Only include password fields if user is changing password
       if (formData.newPassword) {
         if (formData.newPassword !== formData.confirmPassword) {
           throw new Error('New passwords do not match');
@@ -55,13 +62,20 @@ const ProfileSettings = () => {
         if (!formData.currentPassword) {
           throw new Error('Current password is required to set a new password');
         }
+        updateData.currentPassword = formData.currentPassword;
+        updateData.newPassword = formData.newPassword;
       }
 
       // Call API to update profile
-      const updatedUser = await userService.updateProfile(formData);
+      const updatedUser = await userService.updateProfile(updateData);
+      
       
       // Update user context
-      updateUser(updatedUser);
+      updateUser({
+        email:updatedUser.email,
+        address:updatedUser.address,
+        nickname:updatedUser.nickname
+      });
       
       setMessage({ type: 'success', text: 'Profile updated successfully' });
       

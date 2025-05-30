@@ -3,6 +3,8 @@ import { ROUTES } from './constants/routes'
 import MainLayout from './components/layout/MainLayout'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
+import ResetPassword from './pages/auth/ResetPassword'
+import ResetPasswordConfirm from './pages/auth/ResetPasswordConfirm'
 import Dashboard from './pages/Dashboard/Dashboard'
 import AddDebtorPage from './pages/Debtors/AddDebtorPage'
 import DebtorsPage from './pages/Debtors/DebtorsPage'
@@ -21,6 +23,8 @@ function App() {
       <Route path="/" element={<Welcome />} />
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.REGISTER} element={<Register />} />
+      <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+      <Route path={ROUTES.RESET_PASSWORD_CONFIRM} element={<ResetPasswordConfirm />} />
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/debtors" element={<DebtorsPage />} />

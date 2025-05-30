@@ -3,12 +3,14 @@ package lk.oshanh.credimanage.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -41,5 +43,33 @@ public class EmailService {
             """, otp), true);
 
         mailSender.send(message);
+    }
+
+    public void sendPasswordResetEmail(String to, String resetToken) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setFrom(FROM_EMAIL);
+        helper.setTo(to);
+        helper.setSubject("Password Reset Request");
+        helper.setText(String.format("""
+            <html>
+            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2 style="color: #333;">Password Reset Request</h2>
+                <p>You have requested to reset your password. Click the link below to reset your password:</p>
+                <p>
+                    <a href="http://localhost:3000/reset-password/%s" 
+                       style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
+                        Reset Password
+                    </a>
+                </p>
+                <p>This link will expire in 1 hour.</p>
+                <p>If you didn't request this password reset, please ignore this email.</p>
+            </body>
+            </html>
+            """, resetToken), true);
+
+        mailSender.send(message);
+        log.info("mail sent");
     }
 } 

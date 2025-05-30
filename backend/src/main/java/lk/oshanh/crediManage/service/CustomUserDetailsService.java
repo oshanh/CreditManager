@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                             .orElseThrow(() -> new UsernameNotFoundException("User not found with email/address: " + username));
                 });
 
-        System.out.println("\n UserName:"+user+" \n");
+        //System.out.println("\n UserName:"+user+" \n");
 
         String usernameToUse = user.getEmail() != null ? user.getEmail() : user.getAddress();
         String password = user.getPassword() != null ? user.getPassword() : "{noop}web3-user";

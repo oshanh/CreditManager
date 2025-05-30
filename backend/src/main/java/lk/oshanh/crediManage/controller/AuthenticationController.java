@@ -43,4 +43,14 @@ public class AuthenticationController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<AuthResponse> requestPasswordReset(@Valid @RequestBody PasswordResetRequest request) {
+        return ResponseEntity.ok(authenticationService.requestPasswordReset(request));
+    }
+
+    @PostMapping("/confirm-password-reset")
+    public ResponseEntity<AuthResponse> confirmPasswordReset(@Valid @RequestBody PasswordResetConfirmRequest request) {
+        return ResponseEntity.ok(authenticationService.confirmPasswordReset(request));
+    }
 } 
