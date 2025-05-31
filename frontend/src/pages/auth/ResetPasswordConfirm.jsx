@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Eye, EyeOff, Lock } from 'lucide-react';
 import authService from '../../services/authService';
 import DarkModeToggle from '../../components/common/DarkModeToggle';
+import AnimatedBackground from '../../components/common/AnimatedBackground';
 
 const ResetPasswordConfirm = () => {
   const navigate = useNavigate();
@@ -81,9 +82,10 @@ const ResetPasswordConfirm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      <AnimatedBackground />
       <DarkModeToggle />
-      <div className={`w-full max-w-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-8 ${isAnimating ? 'animate-slide-out' : 'animate-slide-in'}`}>
+      <div className={`w-full max-w-md bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-8 ${isAnimating ? 'animate-slide-out' : 'animate-slide-in'} relative z-10`}>
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 text-center">
           Reset Password
         </h2>

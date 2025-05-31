@@ -1,18 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Check, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Plus, Check, RotateCcw, Download, Pen, X } from 'lucide-react';
+import { PDFDownloadLink, pdf } from '@react-pdf/renderer';
 import Button from '../../components/common/Button';
 import { formatCurrency, formatDate } from '../../utils/format';
 import debitService from '../../services/debitService';
 import repaymentService from '../../services/repaymentService';
+import debtorService from '../../services/debtorService';
 import MessageAlert from '../../components/common/MessageAlert';
 import AddRepaymentModal from '../../components/debtors/AddRepaymentModal';
 import ConfirmationModal from '../../components/common/ConfirmationModal';
+import DebitPDFTemplate from '../../components/debtors/DebitPDFTemplate';
+
+// Add polyfills for PDF generation
+if (typeof window !== 'undefined') {
+  import('buffer').then(({ Buffer }) => {
+    window.Buffer = Buffer;
+  });
+}
 
 const DebitRepaymentsPage = () => {
   const { id, debitId } = useParams();
   const navigate = useNavigate();
   const [debit, setDebit] = useState(null);
+  const [debtor, setDebtor] = useState(null);
   const [repayments, setRepayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,14 +36,20 @@ const DebitRepaymentsPage = () => {
     onConfirm: null,
     variant: 'primary'
   });
+  const [signature, setSignature] = useState(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [showSignaturePad, setShowSignaturePad] = useState(false);
+  const canvasRef = useRef(null);
+  const contextRef = useRef(null);
 
   const fetchDebitDetails = async () => {
     try {
       setLoading(true);
       setError(null);
-      const [debits, repaymentsData] = await Promise.all([
+      const [debits, repaymentsData, debtorData] = await Promise.all([
         debitService.getDebitsByDebtorId(id),
-        repaymentService.getRepaymentsForDebit(debitId)
+        repaymentService.getRepaymentsForDebit(debitId),
+        debtorService.getDebtorById(id)
       ]);
       
       const debitData = debits.find(d => d.id === parseInt(debitId));
@@ -42,6 +59,7 @@ const DebitRepaymentsPage = () => {
       
       setDebit(debitData);
       setRepayments(repaymentsData);
+      setDebtor(debtorData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -52,6 +70,23 @@ const DebitRepaymentsPage = () => {
   useEffect(() => {
     fetchDebitDetails();
   }, [id, debitId]);
+
+  useEffect(() => {
+    if (showSignaturePad && canvasRef.current) {
+      const canvas = canvasRef.current;
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = canvas.offsetHeight * 2;
+      canvas.style.width = `${canvas.offsetWidth}px`;
+      canvas.style.height = `${canvas.offsetHeight}px`;
+
+      const context = canvas.getContext('2d');
+      context.scale(2, 2);
+      context.lineCap = 'round';
+      context.strokeStyle = '#000000';
+      context.lineWidth = 2;
+      contextRef.current = context;
+    }
+  }, [showSignaturePad]);
 
   const handleAddRepayment = async (repaymentData) => {
     try {
@@ -162,6 +197,72 @@ const DebitRepaymentsPage = () => {
     });
   };
 
+  const startDrawing = ({ nativeEvent }) => {
+    if (!contextRef.current) return;
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
+    setIsDrawing(true);
+  };
+
+  const draw = ({ nativeEvent }) => {
+    if (!isDrawing || !contextRef.current) return;
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+  };
+
+  const finishDrawing = () => {
+    if (!contextRef.current) return;
+    contextRef.current.closePath();
+    setIsDrawing(false);
+  };
+
+  const clearSignature = () => {
+    if (!canvasRef.current || !contextRef.current) return;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    setSignature(null);
+  };
+
+  const saveSignature = () => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const signatureData = canvas.toDataURL('image/png');
+    setSignature(signatureData);
+    setShowSignaturePad(false);
+  };
+
+  const handleDownloadPDF = async () => {
+    try {
+      const blob = await pdf(
+        <DebitPDFTemplate 
+          debtor={debtor} 
+          debit={debit} 
+          repayments={repayments} 
+          signature={signature} 
+        />
+      ).toBlob();
+      
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `debit-report-${debitId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      setAlert({
+        show: true,
+        message: 'Failed to generate PDF. Please try again.',
+        type: 'error'
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -215,15 +316,35 @@ const DebitRepaymentsPage = () => {
         <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Debit Details</h1>
-            <Button
-              variant="primary"
-              onClick={() => setIsAddRepaymentModalOpen(true)}
-              disabled={remainingAmount <= 0}
-              className="w-full sm:w-auto"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Add Repayment
-            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="primary"
+                onClick={() => setIsAddRepaymentModalOpen(true)}
+                disabled={remainingAmount <= 0}
+                className="flex-1 sm:flex-none"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Add Repayment
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setShowSignaturePad(true)}
+                className="flex-1 sm:flex-none"
+              >
+                <Pen className="w-5 h-5 mr-2" />
+                {signature ? 'Change Signature' : 'Add Signature'}
+              </Button>
+              {debtor && debit && (
+                <Button
+                  variant="secondary"
+                  onClick={handleDownloadPDF}
+                  className="flex-1 sm:flex-none"
+                >
+                  <Download className="w-5 h-5 mr-2" />
+                  Export PDF
+                </Button>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -420,6 +541,47 @@ const DebitRepaymentsPage = () => {
         message={confirmationModal.message}
         variant={confirmationModal.variant}
       />
+
+      {/* Signature Pad Modal */}
+      {showSignaturePad && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add Signature</h3>
+              <button
+                onClick={() => setShowSignaturePad(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 mb-4">
+              <canvas
+                ref={canvasRef}
+                onMouseDown={startDrawing}
+                onMouseMove={draw}
+                onMouseUp={finishDrawing}
+                onMouseLeave={finishDrawing}
+                className="w-full h-48 bg-white dark:bg-gray-700 rounded"
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="secondary"
+                onClick={clearSignature}
+              >
+                Clear
+              </Button>
+              <Button
+                variant="primary"
+                onClick={saveSignature}
+              >
+                Save Signature
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
