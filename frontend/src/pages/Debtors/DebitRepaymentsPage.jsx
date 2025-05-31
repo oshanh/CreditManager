@@ -235,6 +235,7 @@ const DebitRepaymentsPage = () => {
   };
 
   const handleDownloadPDF = async () => {
+    
     try {
       const blob = await pdf(
         <DebitPDFTemplate 

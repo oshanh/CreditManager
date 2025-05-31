@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 });
 
 const DebitPDFTemplate = ({ debtor, debit, repayments, signature }) => (
+    
   <Document>
     <Page size="A4" style={styles.page}>
       {/* Header */}
@@ -121,7 +122,7 @@ const DebitPDFTemplate = ({ debtor, debit, repayments, signature }) => (
         <Text style={styles.subtitle}>Debtor Information</Text>
         <View style={styles.row}>
           <Text style={styles.label}>Name:</Text>
-          <Text style={styles.value}>{debtor.name}</Text>
+          <Text style={styles.value}>{debtor.debtorName}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Email:</Text>
@@ -129,7 +130,7 @@ const DebitPDFTemplate = ({ debtor, debit, repayments, signature }) => (
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Phone:</Text>
-          <Text style={styles.value}>{debtor.phone || 'N/A'}</Text>
+          <Text style={styles.value}>{debtor.contactNumber || 'N/A'}</Text>
         </View>
       </View>
 
