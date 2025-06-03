@@ -117,6 +117,16 @@ const debitService = {
     if (remainingAmount === 0) return 'PAID';
     if (remainingAmount < debit.debitAmount) return 'PARTIALLY_PAID';
     return 'PENDING';
+  },
+
+  getOverdueDebits: async () => {
+    try {
+      const response = await apiClient.get(`${BASE_URL}/overdue`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching overdue debits:', error);
+      throw error;
+    }
   }
 };
 

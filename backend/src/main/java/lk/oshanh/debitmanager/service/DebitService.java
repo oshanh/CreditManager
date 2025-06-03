@@ -2,6 +2,7 @@ package lk.oshanh.debitmanager.service;
 
 import jakarta.transaction.Transactional;
 import lk.oshanh.debitmanager.dto.DebitDTO;
+import lk.oshanh.debitmanager.dto.OverdueDebitDTO;
 import lk.oshanh.debitmanager.entity.Debit;
 import lk.oshanh.debitmanager.entity.Debtor;
 import lk.oshanh.debitmanager.entity.Repayment;
@@ -10,6 +11,7 @@ import lk.oshanh.debitmanager.mapper.DebtorMapper;
 import lk.oshanh.debitmanager.repository.DebitRepository;
 import lk.oshanh.debitmanager.repository.DebtorRepository;
 import lk.oshanh.debitmanager.repository.RepaymentRepository;
+import lk.oshanh.debitmanager.security.SecurityUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +29,14 @@ public class DebitService {
     private final RepaymentRepository repaymentRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final DebtorMapper debtorMapper = new DebtorMapper();
+    private final SecurityUtils securityUtils;
 
-    public DebitService(DebitRepository debitRepository, DebtorRepository debtorRepository, RepaymentRepository repaymentRepository, SimpMessagingTemplate messagingTemplate) {
+    public DebitService(DebitRepository debitRepository, DebtorRepository debtorRepository, RepaymentRepository repaymentRepository, SimpMessagingTemplate messagingTemplate, SecurityUtils securityUtils) {
         this.debitRepository = debitRepository;
         this.debtorRepository = debtorRepository;
         this.repaymentRepository = repaymentRepository;
         this.messagingTemplate = messagingTemplate;
+        this.securityUtils = securityUtils;
     }
 
     @Transactional
@@ -197,5 +201,41 @@ public class DebitService {
                     break;
             }
         }
+    }
+
+    public List<OverdueDebitDTO> getOverdueDebits() {
+
+        Long userId = securityUtils.getCurrentUserId();
+        if (userId == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        Debtor debtor = debtorRepository.findDebtorById(userId);
+        if (debtor == null) {
+            throw new RuntimeException("Debtor not found");
+            }
+
+        LocalDate today = LocalDate.now();
+        return debitRepository.findByDebtor_User_Uid(userId).stream()
+            .filter(debit -> {
+                // Check if debit is overdue and not fully paid
+                boolean isOverdue = debit.getDueDate().isBefore(today);
+                boolean isNotFullyPaid = debit.getTotalRepayments() < debit.getDebitAmount();
+                //boolean isUser=debit.getDebtor().getUser().getUid().equals(userId);
+                return isOverdue && isNotFullyPaid;
+            })
+            .map(debit -> {
+                OverdueDebitDTO dto = new OverdueDebitDTO();
+                dto.setId(debit.getId());
+                dto.setDebtorName(debit.getDebtor().getDebtorName());
+                dto.setDebitAmount(debit.getDebitAmount());
+                dto.setTotalRepayments(debit.getTotalRepayments());
+                dto.setDueDate(debit.getDueDate());
+                dto.setDescription(debit.getDescription());
+                dto.setDebtorId(debit.getDebtor().getId());
+                dto.setDaysOverdue(ChronoUnit.DAYS.between(debit.getDueDate(), today));
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package lk.oshanh.debitmanager.controller;
 
 import lk.oshanh.debitmanager.dto.DebitDTO;
+import lk.oshanh.debitmanager.dto.OverdueDebitDTO;
 import lk.oshanh.debitmanager.service.DebitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,5 +74,11 @@ public class DebitController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/overdue")
+    public ResponseEntity<List<OverdueDebitDTO>> getOverdueDebits() {
+        List<OverdueDebitDTO> overdueDebits = debitService.getOverdueDebits();
+        return ResponseEntity.ok(overdueDebits);
     }
 }

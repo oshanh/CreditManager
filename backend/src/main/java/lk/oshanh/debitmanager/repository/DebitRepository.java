@@ -11,4 +11,7 @@ public interface DebitRepository extends JpaRepository<Debit, Long> {
     // You can define custom queries here if needed
     Debit findDebitById(long id);
     List<Debit> findByDebtorId(Long debtorId);
+
+    //find by userUid
+    List<Debit> findByDebtor_User_Uid(Long userUid);
 }
