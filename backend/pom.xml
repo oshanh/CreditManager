@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>lk.oshanh</groupId>
-    <artifactId>CrediManage</artifactId>
+    <artifactId>debit_manager_backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>credit</name>
-    <description>credit</description>
+    <name>debit_manager</name>
+    <description>debit_manager</description>
     <url/>
     <licenses>
         <license/>

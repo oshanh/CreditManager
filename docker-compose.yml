@@ -6,14 +6,14 @@ services:
     #platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: creditmanager
+      MYSQL_DATABASE: debit_manager
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
   backend:
-    image: 'oshanh/credit-backend:64'
+    image: 'oshanh/debitmanager-backend:64'
     #platform: linux/amd64
     # build: 
     #   context: ./backend
@@ -23,14 +23,14 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/creditmanager?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/debit_manager?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     volumes:
       - uploads_data:/uploads
 
   frontend:
-    image: 'oshanh/credit-frontend:64'
+    image: 'oshanh/debitmanager-frontend:64'
     #platform: linux/arm64
     # build: 
     #   context: ./frontend

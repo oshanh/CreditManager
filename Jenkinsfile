@@ -5,8 +5,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         SSH_TARGET = 'ubuntu@107.23.177.112'
         TAG = "${env.BUILD_NUMBER}"
-        BACKEND_IMAGE = "oshanh/credit-backend:${env.BUILD_NUMBER}"
-        FRONTEND_IMAGE = "oshanh/credit-frontend:${env.BUILD_NUMBER}"
+        BACKEND_IMAGE = "oshanh/debitmanager-backend:${env.BUILD_NUMBER}"
+        FRONTEND_IMAGE = "oshanh/debitmanager-frontend:${env.BUILD_NUMBER}"
     }
 
     tools {
@@ -70,7 +70,7 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no $SSH_TARGET << EOF
                     docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-                    mkdir -p creditmanager && cd creditmanager
+                    mkdir -p debitmanager && cd debitmanager
 
                     cat > docker-compose.yml << COMPOSE
 version: '3.8'
@@ -80,7 +80,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: creditmanager
+      MYSQL_DATABASE: debit_manager
     ports:
       - "3306:3306"
     volumes:
@@ -93,7 +93,7 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/creditmanager?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/debit_manager?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_MAIL_PASSWORD: $EMAIL_APP_PWD
