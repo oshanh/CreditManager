@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;  // Use jakarta.persistence for JPA annotations
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -33,4 +36,6 @@ public class Debtor {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
