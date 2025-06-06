@@ -82,7 +82,7 @@ const Navbar = ({ onToggleSidebar }) => {
                 >
                   <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700">
                     <p className="font-medium">{user?.nickname || 'User'}</p>
-                    <p className="text-gray-500 dark:text-gray-400 truncate">{user?.email || 'user@example.com'}</p>
+                    <p className="text-gray-500 dark:text-gray-400 truncate">{user?.email || 'N/A'}</p>
                   </div>
                   <Link
                     to={ROUTES.PROFILE}

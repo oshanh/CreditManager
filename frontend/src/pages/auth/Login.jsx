@@ -112,6 +112,7 @@ const Login = () => {
             if (loginResponse.token) {
                 login({
                     email: loginResponse.email,
+                    address: loginResponse.address,
                     nickname: loginResponse.nickname
                 });
                 navigate('/dashboard');

@@ -42,9 +42,9 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, setIsCollapsed }) => {
   const navigation = [
     { name: 'Dashboard', href: ROUTES.DASHBOARD, icon: Home },
     { name: 'Debtors', href: ROUTES.DEBTORS, icon: Users },
-    { name: 'Transactions', href: ROUTES.TRANSACTIONS, icon: DollarSign },
-    { name: 'Reports', href: ROUTES.REPORTS, icon: BarChart2 },
-    { name: 'Documents', href: ROUTES.DOCUMENTS, icon: FileText },
+    //{ name: 'Transactions', href: ROUTES.TRANSACTIONS, icon: DollarSign },
+    //{ name: 'Reports', href: ROUTES.REPORTS, icon: BarChart2 },
+    //{ name: 'Documents', href: ROUTES.DOCUMENTS, icon: FileText },
     
    
   ];

@@ -147,14 +147,14 @@ const DebtorDetailsPage = () => {
               <CreditCard className="w-5 h-5 mr-2" />
               Debits
             </Button>
-            <Button
+            {/* <Button
               variant={activeTab === 'transactions' ? 'primary' : 'secondary'}
               onClick={() => setActiveTab('transactions')}
               className="flex items-center"
             >
               <Receipt className="w-5 h-5 mr-2" />
               Transactions
-            </Button>
+            </Button> */}
           </div>
           {activeTab === 'debits' && (
             <Button
