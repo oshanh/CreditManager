@@ -15,11 +15,11 @@ const ProfileSettings = () => {
 
   const [formData, setFormData] = useState({
     nickname: '',
-    email: '',
-    address: '',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    email: null,
+    address: null,
+    currentPassword: null,
+    newPassword: null,
+    confirmPassword: null
   });
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const ProfileSettings = () => {
       setFormData(prev => ({
         ...prev,
         nickname: user.nickname || '',
-        email: user.email || '',
-        address: user.address || ''
+        email: user.email || null,
+        address: user.address || null
       }));
     }
   }, [user]);
@@ -66,6 +66,8 @@ const ProfileSettings = () => {
         updateData.newPassword = formData.newPassword;
       }
 
+      console.log(updateData);
+
       // Call API to update profile
       const updatedUser = await userService.updateProfile(updateData);
       
@@ -82,9 +84,9 @@ const ProfileSettings = () => {
       // Clear password fields
       setFormData(prev => ({
         ...prev,
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
+        currentPassword: null,
+        newPassword: null,
+        confirmPassword: null
       }));
     } catch (error) {
       setMessage({ 
