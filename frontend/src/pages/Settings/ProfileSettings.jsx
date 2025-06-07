@@ -149,7 +149,7 @@ const ProfileSettings = () => {
                     }}
                     className="absolute right-2 top-8 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                   >
-                    Change
+                    {user.email ? 'Change' : 'Add'}
                   </button>
                 </div>
                 <Input
