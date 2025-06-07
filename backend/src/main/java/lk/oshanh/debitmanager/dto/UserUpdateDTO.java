@@ -9,4 +9,6 @@ public class UserUpdateDTO {
     private String address;
     private String currentPassword;
     private String newPassword;
+    private String oldEmailOtp;
+    private String newEmailOtp;
 } 

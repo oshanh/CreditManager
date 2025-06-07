@@ -6,12 +6,14 @@ import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
 import MessageAlert from '../../components/common/MessageAlert';
 import userService from '../../services/userService';
+import EmailChangeModal from '../../components/EmailChangeModal';
 
 const ProfileSettings = () => {
   const { user, updateUser } = useUser();
   const { isDarkMode, toggleTheme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const [formData, setFormData] = useState({
     nickname: '',
@@ -50,7 +52,6 @@ const ProfileSettings = () => {
       // Create update data object with only the fields that are being changed
       const updateData = {
         nickname: formData.nickname,
-        email: formData.email,
         address: formData.address
       };
 
@@ -66,17 +67,14 @@ const ProfileSettings = () => {
         updateData.newPassword = formData.newPassword;
       }
 
-      console.log(updateData);
-
       // Call API to update profile
       const updatedUser = await userService.updateProfile(updateData);
       
-      
       // Update user context
       updateUser({
-        email:updatedUser.email,
-        address:updatedUser.address,
-        nickname:updatedUser.nickname
+        email: updatedUser.email,
+        address: updatedUser.address,
+        nickname: updatedUser.nickname
       });
       
       setMessage({ type: 'success', text: 'Profile updated successfully' });
@@ -130,23 +128,40 @@ const ProfileSettings = () => {
                   icon={User}
                   placeholder="Enter your display name"
                 />
-                <Input
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  icon={Mail}
-                  placeholder="Enter your email"
-                />
+                <div className="relative">
+                  <Input
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    disabled
+                    icon={Mail}
+                    placeholder="Enter your email"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if(user.email){
+                        setShowEmailModal(true)
+                      }else{
+                        setMessage({ type: 'error', text: 'You must have an email to change it' });
+                      }
+                    }}
+                    className="absolute right-2 top-8 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    Change
+                  </button>
+                </div>
                 <Input
                   label="Web3 Address"
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
+                  disabled
                   icon={User}
                   placeholder="Enter your web3 address"
                 />
+                
               </div>
             </div>
 
@@ -223,6 +238,18 @@ const ProfileSettings = () => {
           </form>
         </div>
       </div>
+
+      <EmailChangeModal
+        show={showEmailModal}
+        onHide={() => setShowEmailModal(false)}
+        onSuccess={updateUser}
+        // onSuccess={() => {
+        //   // Refresh user data after successful email change
+        //   userService.getCurrentUser().then(userData => {
+        //     updateUser(userData);
+        //   });
+        // }}
+      />
     </div>
   );
 };

@@ -33,7 +33,13 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  const value = useMemo(() => ({ user, login, logout, updateUser }), [user]);
+  //update token
+  const updateToken = (token) => {
+    
+    localStorage.setItem("token", JSON.stringify(token));
+  };
+
+  const value = useMemo(() => ({ user, login, logout, updateUser, updateToken }), [user]);
 
   return (
     <UserContext.Provider value={value}>

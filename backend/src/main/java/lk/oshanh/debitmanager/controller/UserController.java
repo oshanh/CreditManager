@@ -1,5 +1,6 @@
 package lk.oshanh.debitmanager.controller;
 
+import lk.oshanh.debitmanager.dto.AuthResponse;
 import lk.oshanh.debitmanager.dto.UserUpdateDTO;
 import lk.oshanh.debitmanager.entity.User;
 import lk.oshanh.debitmanager.security.SecurityUtils;
@@ -32,5 +33,21 @@ public class UserController {
 
         UserUpdateDTO updatedUser = userService.updateUser(securityUtils.getCurrentUserId(), updateDTO);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @PostMapping("/update/email")
+    public ResponseEntity<UserUpdateDTO> initiateEmailChange(
+            @AuthenticationPrincipal User user,
+            @RequestBody UserUpdateDTO updateDTO) {
+        UserUpdateDTO response = userService.initiateEmailChange(securityUtils.getCurrentUserId(), updateDTO.getEmail());
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/email/verify")
+    public ResponseEntity<AuthResponse> verifyAndUpdateEmail(
+            @AuthenticationPrincipal User user,
+            @RequestBody UserUpdateDTO updateDTO) {
+        AuthResponse response = userService.verifyAndUpdateEmail(securityUtils.getCurrentUserId(), updateDTO);
+        return ResponseEntity.ok(response);
     }
 } 

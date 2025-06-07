@@ -147,7 +147,7 @@ public class AuthenticationService {
                     User newUser = new User();
                     newUser.setAddress(request.getAddress());
                     newUser.setNickname("Web3User_" + request.getAddress().substring(0, 6));
-                    //newUser.setEmail("");
+
                     newUser.setCreatedAt(LocalDateTime.now());
                     return userRepository.save(newUser);
                 });
