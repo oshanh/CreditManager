@@ -30,4 +30,10 @@ public class SecurityUtils {
         User user = getCurrentUser();
         return user != null ? user.getUid() : null;
     }
+
+    //get user address
+    public String getCurrentuserWeb3Address(){
+        User user = getCurrentUser();
+        return user != null ? user.getAddress() : null;
+    }
 } 

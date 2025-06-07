@@ -40,6 +40,16 @@ const userService = {
       newPassword: profileData.newPassword
     });
     return response.data;
+  },
+
+  initiateWeb3EmailVerification: async (data) => {
+    const response = await apiClient.post('/users/web3/email/verify', data);
+    return response.data;
+  },
+
+  verifyWeb3EmailOTP: async (data) => {
+    const response = await apiClient.put('/users/web3/email/verify/otp', data);
+    return response.data;
   }
 };
 

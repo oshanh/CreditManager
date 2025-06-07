@@ -2,6 +2,7 @@ package lk.oshanh.debitmanager.controller;
 
 import lk.oshanh.debitmanager.dto.AuthResponse;
 import lk.oshanh.debitmanager.dto.UserUpdateDTO;
+import lk.oshanh.debitmanager.dto.Web3EmailVerificationDTO;
 import lk.oshanh.debitmanager.entity.User;
 import lk.oshanh.debitmanager.security.SecurityUtils;
 import lk.oshanh.debitmanager.service.UserService;
@@ -49,5 +50,19 @@ public class UserController {
             @RequestBody UserUpdateDTO updateDTO) {
         AuthResponse response = userService.verifyAndUpdateEmail(securityUtils.getCurrentUserId(), updateDTO);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/web3/email/verify")
+    public ResponseEntity<?> initiateWeb3EmailVerification(
+            @RequestBody Web3EmailVerificationDTO verificationDTO) {
+        ResponseEntity<?> response = userService.initiateWeb3EmailVerification(verificationDTO);
+        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+    }
+
+    @PutMapping("/web3/email/verify/otp")
+    public ResponseEntity<?> verifyWeb3EmailOTP(
+            @RequestBody Web3EmailVerificationDTO verificationDTO) {
+        ResponseEntity<?> response = userService.verifyWeb3EmailOTP(verificationDTO);
+        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
     }
 } 

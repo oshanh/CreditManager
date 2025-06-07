@@ -7,6 +7,8 @@ import Input from '../../components/common/Input';
 import MessageAlert from '../../components/common/MessageAlert';
 import userService from '../../services/userService';
 import EmailChangeModal from '../../components/EmailChangeModal';
+import Web3EmailVerificationModal from '../../components/Web3EmailVerificationModal';
+import { web3Service } from '../../services/web3Service';
 
 const ProfileSettings = () => {
   const { user, updateUser } = useUser();
@@ -14,6 +16,7 @@ const ProfileSettings = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showWeb3EmailModal, setShowWeb3EmailModal] = useState(false);
 
   const [formData, setFormData] = useState({
     nickname: '',
@@ -96,6 +99,29 @@ const ProfileSettings = () => {
     }
   };
 
+  const handleEmailChange = async () => {
+    try {
+      // Check if user has a Web3 wallet connected
+      //const address = await web3Service.getCurrentAccount();
+      const address=user.address;
+      console.log(address);
+      if (address) {
+        // If user has a Web3 wallet, show Web3 email modal
+        setShowWeb3EmailModal(true);
+      } else {
+        
+        setShowEmailModal(true);
+      }
+    } catch (error) {
+      setMessage({ 
+        type: 'error', 
+        text: 'Failed to check wallet connection' 
+      });
+      console.log(error);
+      
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
@@ -140,16 +166,10 @@ const ProfileSettings = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      if(user.email){
-                        setShowEmailModal(true)
-                      }else{
-                        setMessage({ type: 'error', text: 'You must have an email to change it' });
-                      }
-                    }}
+                    onClick={handleEmailChange}
                     className="absolute right-2 top-8 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                   >
-                    {user.email ? 'Change' : 'Add'}
+                    {user?.email ? 'Change' : 'Add'}
                   </button>
                 </div>
                 <Input
@@ -161,7 +181,6 @@ const ProfileSettings = () => {
                   icon={User}
                   placeholder="Enter your web3 address"
                 />
-                
               </div>
             </div>
 
@@ -243,12 +262,19 @@ const ProfileSettings = () => {
         show={showEmailModal}
         onHide={() => setShowEmailModal(false)}
         onSuccess={updateUser}
-        // onSuccess={() => {
-        //   // Refresh user data after successful email change
-        //   userService.getCurrentUser().then(userData => {
-        //     updateUser(userData);
-        //   });
-        // }}
+      />
+
+      <Web3EmailVerificationModal
+        show={showWeb3EmailModal}
+        onHide={() => setShowWeb3EmailModal(false)}
+        onSuccess={(response) => {
+          updateUser({
+            email: response.email,
+            address: response.address,
+            nickname: response.nickname
+          });
+          setMessage({ type: 'success', text: 'Email updated successfully' });
+        }}
       />
     </div>
   );

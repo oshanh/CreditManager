@@ -3,6 +3,7 @@ package lk.oshanh.debitmanager.service;
 import jakarta.mail.MessagingException;
 import lk.oshanh.debitmanager.dto.AuthResponse;
 import lk.oshanh.debitmanager.dto.UserUpdateDTO;
+import lk.oshanh.debitmanager.dto.Web3EmailVerificationDTO;
 import lk.oshanh.debitmanager.entity.User;
 import lk.oshanh.debitmanager.exception.ResourceNotFoundException;
 import lk.oshanh.debitmanager.exception.UnauthorizedException;
@@ -10,13 +11,18 @@ import lk.oshanh.debitmanager.exception.BadRequestException;
 import lk.oshanh.debitmanager.mapper.UserMapper;
 import lk.oshanh.debitmanager.repository.UserRepository;
 import lk.oshanh.debitmanager.security.JwtTokenProvider;
+import lk.oshanh.debitmanager.security.SecurityUtils;
+import lk.oshanh.debitmanager.utils.Web3Verifier;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -28,6 +34,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final SecurityUtils securityUtils;
 
     private final Map<String, String> otpStore = new ConcurrentHashMap<>();
 
@@ -169,5 +176,87 @@ public class UserService {
 //        response.setEmail(updated.getEmail());
 //
 //        return response;
+    }
+
+    @Transactional
+    public ResponseEntity<?> initiateWeb3EmailVerification(Web3EmailVerificationDTO verificationDTO) {
+
+        // Verify Web3 signature
+        if (!Web3Verifier.verifySignature(
+                securityUtils.getCurrentuserWeb3Address(),
+                verificationDTO.getMessage(),
+                verificationDTO.getSignature())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Web3 signature");
+            //throw new UnauthorizedException("Invalid Web3 signature");
+        }
+
+        // Check if email is already taken
+        if (userRepository.existsByEmail(verificationDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already taken");
+        }
+
+        // Generate OTP
+        String otp = emailService.generateOTP();
+
+        try {
+            // Send OTP to new email
+            emailService.sendNewEmailVerification(verificationDTO.getEmail(), otp);
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP request failed");
+        }
+
+        // Store OTP
+        otpStore.put(verificationDTO.getEmail(), otp);
+
+
+        UserUpdateDTO response = new UserUpdateDTO();
+        response.setEmail(verificationDTO.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Transactional
+    public ResponseEntity<?> verifyWeb3EmailOTP(Web3EmailVerificationDTO verificationDTO) {
+        // Verify Web3 signature again
+        if (!Web3Verifier.verifySignature(
+                securityUtils.getCurrentuserWeb3Address(),
+                verificationDTO.getMessage(),
+                verificationDTO.getSignature())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Web3 signature");
+        }
+
+        // Verify OTP
+        String storedOtp = otpStore.get(verificationDTO.getEmail());
+
+        if (storedOtp == null || !storedOtp.equals(verificationDTO.getOtp())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid OTP");
+        }
+
+        // Find user by address
+        User user = userRepository.findByAddress(verificationDTO.getAddress())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with address: " + verificationDTO.getAddress()));
+
+        // Update email
+        user.setEmail(verificationDTO.getEmail());
+        user.setEmailVerified(true);
+        
+        User updated = userRepository.save(user);
+
+        // Remove OTP from store
+        otpStore.remove(verificationDTO.getEmail());
+
+        // Send success notification
+        try {
+            emailService.sendEmailChangeSuccessNotification(verificationDTO.getEmail(), verificationDTO.getEmail());
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(AuthResponse.builder()
+                .isAuthenticated(true)
+                .token(jwtTokenProvider.generateToken(updated.getAddress()))
+                .email(updated.getEmail())
+                .nickname(updated.getNickname())
+                .address(updated.getAddress())
+                .build());
     }
 } 
