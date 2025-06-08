@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -183,7 +182,7 @@ public class UserService {
 
         // Verify Web3 signature
         if (!Web3Verifier.verifySignature(
-                securityUtils.getCurrentuserWeb3Address(),
+                securityUtils.getCurrentWeb3Address(),
                 verificationDTO.getMessage(),
                 verificationDTO.getSignature())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Web3 signature");
@@ -218,7 +217,7 @@ public class UserService {
     public ResponseEntity<?> verifyWeb3EmailOTP(Web3EmailVerificationDTO verificationDTO) {
         // Verify Web3 signature again
         if (!Web3Verifier.verifySignature(
-                securityUtils.getCurrentuserWeb3Address(),
+                securityUtils.getCurrentWeb3Address(),
                 verificationDTO.getMessage(),
                 verificationDTO.getSignature())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Web3 signature");

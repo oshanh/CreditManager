@@ -30,7 +30,7 @@ public class UserController {
     public ResponseEntity<UserUpdateDTO> updateCurrentUser(
             @AuthenticationPrincipal User user,
             @RequestBody UserUpdateDTO updateDTO) {
-        System.out.println(updateDTO);
+
 
         UserUpdateDTO updatedUser = userService.updateUser(securityUtils.getCurrentUserId(), updateDTO);
         return ResponseEntity.ok(updatedUser);
